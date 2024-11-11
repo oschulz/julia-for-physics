@@ -1,17 +1,19 @@
 ### A Pluto.jl notebook ###
-# v0.19.46
+# v0.20.3
 
 using Markdown
 using InteractiveUtils
 
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
+    #! format: off
     quote
         local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
+    #! format: on
 end
 
 # ╔═╡ 6af6b562-e920-4975-b253-c169ab58456e
@@ -56,18 +58,6 @@ begin
 	"""
 end
 
-# ╔═╡ 1174e4de-7433-49ec-bf8e-8b4dbed1728c
-using Plots
-
-# ╔═╡ 5f661f5c-8072-43d7-8202-f0214058041a
-begin
-    using Distributions
-    dist = Normal(0.0, 5.0)
-end
-
-# ╔═╡ 19deea61-306c-43cd-bae7-0dd49647cb08
-using PyCall
-
 # ╔═╡ d4b37b8e-3b58-42e0-90e0-e7827d325355
 using Colors, ColorSchemes, Images
 
@@ -103,7 +93,7 @@ using CUDA # Take this out if you don't want to install and load CUDA:
 </div>
 
 <p style="text-align: center;"> 
-	<em>JuliaHep 2024, CERN, October 2024</em>
+	<em>LEGEND bootcamp, November 2024</em>
 </p>"""
 
 # ╔═╡ be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
@@ -123,56 +113,6 @@ md"""
     * Performance
 
 * Usually involves compromises
-"""
-
-# ╔═╡ 3d67632f-2e27-4d74-86ac-6851079cb5fd
-md"""
-## Programming Language Options
-
-* C++:
-    * Pro: Very fast (in expert hands)
-    * Pro: Really cool new concepts (even literally) in C++11/14/17/...
-    * Con: Complex, takes long time to learn and much longer to master
-    * Con: Straightforward tasks often result in lengthy code
-    * Con: No memory management (General protection faults)  
-    * Con: No universal package management
-    * Con: Composability isn't great
-"""
-
-# ╔═╡ e92bdc7e-92bf-4534-baf3-bda98136689a
-md"""
-## Programming Language Options
-
-* Python:
-    * Pro: Broad user base, popular first programming language
-    * Pro: Easy to learn, good standard library
-    * Con: Can't write time-critical loops in Python,  
-      workarounds like Numba/Cython have
-      [many limitations](http://www.stochasticlifestyle.com/why-numba-and-cython-are-not-substitutes-for-julia/),  
-      don't compose well
-    * Con: Language itself fairly primitive, not very expressive
-    * Con: Duck-Typing necessitates lots of test code
-    * Con: No effective multi-threading
-    * Con: Composability isn't great
-"""
-
-# ╔═╡ 7f016f40-1f3f-44d4-8e74-cd596c8acbd8
-md"""
-## What else is there?
-
-* Fortran:
-    * Pro: Math can be really fast
-    * Con: Old language, few modern concepts
-    * Con: Shrinking user base
-    * Con: Composability isn't great
-    * Do you *really* want to ...?
-
-
-* Scala, Go, Kotlin etc.:
-    * Pro: Lots of individual strengths
-    * Con: Math either fast *or* generic *or* or complicated
-    * Con: Calling C, Fortran or Phython code often difficult
-    * Con: Composability isn't great
 """
 
 # ╔═╡ ea08384d-79a6-48e1-a893-0bb0f8134c9c
@@ -219,36 +159,11 @@ md"""
 * Result: Packages tend not to compose well
 """
 
-# ╔═╡ b8113ef0-4126-49ba-b57c-ada2da42696a
-md"""
-## What we want is a language ...
-
-* as fast as C/C++/Fortran
-* as easy to learn and productive as Python
-* with a solution for the expression problem
-* with first class math support (vectors, matrices, etc.)
-* with excellent package management
-* with true functional programming
-* with great Fortran/C/C++/Python integration
-* with true metaprogramming (like Lisp or Scala)
-* good at parallel and distributed programming
-* suitable for interactive, small and large applications
-"""
-
-# ╔═╡ 45c86bad-8692-4d5b-9cea-d2a0a12a0fc1
-md"""
-## Julia
-
-* Designed for scientific/technical computing
-* Originated at MIT, first public version 2012
-* Covers the whole wish-list
-* Clear focus on user productivity and software quality
-* Rapid growth of user base and software packages
-* Current version: Julia v1.10 (v1.11 release candidate available)"""
-
 # ╔═╡ efecd9a4-94af-494d-b63d-91a4ccf3357d
 md"""
-## Julia Language Properties
+## Julia Language Features
+
+Julia solves both the two-language problem and the expression problem..
 
 * Fast: JAOT compilation to native CPU and GPU code
 * Multiple-dispatch (more powerful than object-oriented): \
@@ -261,7 +176,7 @@ md"""
 
 # ╔═╡ 9633ccf3-ec6f-4cb2-aaa1-0aab71c3c160
 md"""
-## Julia Language Properties, cont.
+## Julia Language Features, cont.
 
 * ...
 * Local and distributed code execution
@@ -273,75 +188,6 @@ md"""
   built-in good scientific practice
 * Excellent REPL (console)
 * Easy to call Fortran, C/C++ and Python code"""
-
-# ╔═╡ c0bbf02e-2315-46be-953f-095c2fcaeca4
-md"""
-## Particle physics publications with Julia
-
-Incomplete selection of some particle physics papers partially or fully based on Julia:
-
-* GERDA *Final Results of GERDA on the Search for Neutrinoless Double-$$\beta$$ Decay* [Phys. Rev. Lett. (2020)](https://doi.org/10.1103/PhysRevLett.125.252502)
-
-* LHCb *Study of the doubly charmed tetraquark $$T^+_{cc}$$*[nature comm., 2021](https://doi.org/10.1038/s41467-022-30206-w)
-
-* LHCb *Observation of excited $$\Omega_c^0$$ baryons in $$\Omega_b^- \to \Xi_c^+ K^-m\pi^-$$ decays* [Phys. Rev. D, (2021)](https://doi.org/10.1103/PhysRevD.104.L091102)
-
-* Eschle et al., *Potential of the Julia programming language for high energy physics computing* [Comput Softw Big Sci (2023)](https://doi.org/10.1007/s41781-023-00104-x)
-
-* Botje et al. *Constraints on the Up-Quark Valence Distribution in the Proton* [PhysRevLett (2023)](https://doi.org/10.1103/PhysRevLett.130.141901)
-
-
-* An et al., *The determination of the spin and parity of a vector-vector system* [acc. by JHEP (2024)](https://arxiv.org/abs/2007.05501)
-"""
-
-# ╔═╡ 1b7696a4-124f-4bee-b967-b2ecfcee35a4
-md"""
-## Julia in high-performance computing (HPC)
-
-Julia at scale (very incomplete list):
-
-* Celeste: Variational Bayesian inference for astronomical images (doi:10.1214/19-AOAS1258), 1.54 petaflops using 1.3 million threads on 9,300 Knights Landing (KNL) nodes on Cori at NERSC
-
-* Clima: Full-earth climate simulation, https://clima.caltech.edu, large team, uses everything from MPI to GPUs
-
-* Ice-flow simulations with FastIce.jl on supercomputer LUMI (AMD GPUs), excellent scaling
-
-* ...
-"""
-
-# ╔═╡ 613a920a-1fcc-4b09-b6f8-7181d43c572d
-md"""
-## When (not) to use Julia
-
-* *Do* use Julia for computations, visualization, data processing ... pretty much anything scientific/technical
-
-* *Do not* use Julia for scripts what will only run for a second (code gen overhead), use Python or shell scripts
-
-* *Do not (at least not yet)* use Julia for (non-computational) web apps, etc., use Go or Node.js
-
-* *Do not (at least not yet)* use Julia for big machine learning with standard building blocks (LLMs, etc.), use Python frameworks
-
-* *Do* try Julia for custom machine learning that mixes physics models and ML blocks
-"""
-
-# ╔═╡ cd8d42d6-fd19-4478-b038-a66ccd2131d2
-md"""
-## The Julia language
-"""
-
-# ╔═╡ 553560a1-9874-4d27-9fcc-305ecd433a5d
-md"""
-## Verbs and nouns - functions and types
-
-* Julia is not Java: Verbs aren't owned by nouns
-
-* Julia has: types, functions and methods
-
-* Object-oriented languages: methods belong to types
-
-* Julia: methods belong to *functions*, not to types! \
-  In combination with multiple dispatch, much more powerful than OO.
-"""
 
 # ╔═╡ 00191462-4c08-471b-a817-d534cad5012b
 md"""
@@ -424,7 +270,7 @@ end
 # ╔═╡ 3dfe1b03-6c33-4072-9054-c737e8b8cf47
 md"""
 ## Parametric types
-== AbstractMatrix{T} where {T<:Real}
+
 Julia has a powerful parametric type system, based on set theory:
 
 ```julia
@@ -660,16 +506,6 @@ md"""
 5) Binary machine code
 """
 
-# ╔═╡ 93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
-md"""
-## Let's Look Under the Hood"""
-
-# ╔═╡ bc4af845-12ce-47f6-9320-a7372a5c5892
-@code_llvm debuginfo=:none f(20, 2.1)
-
-# ╔═╡ 79af3ef2-a18e-41c5-bffb-c1a452592204
-@code_native debuginfo=:none f(20, 2.1)
-
 # ╔═╡ bc7710c5-8638-4039-99ef-a411964a12c5
 md"""
 ## Multiple Dispatch"""
@@ -739,24 +575,6 @@ Shorter broadcast syntax:
 # ╔═╡ 05d3b4b6-e0aa-4db0-bc5b-6e7f710a3551
 (A .+ B) .^ 2
 
-# ╔═╡ eb1c9614-daf3-4a86-b056-52581bd0b07c
-md"""
-## Loop Fusion and SIMD Vectorization"""
-
-# ╔═╡ 1d256fff-72c5-4057-928d-9cb0bbef572d
-begin
-    bar(X, Y) = (X .+ Y) .^ 2
-    @code_llvm raw=false debuginfo=:none bar(A, B)
-end
-
-# ╔═╡ 558799cf-c133-4558-ba3e-7ecafd9ce62e
-md"""
-## Native SIMD code
-"""
-
-# ╔═╡ 2f673b0f-69c4-4954-a2d5-4166ad01c9f1
-@code_native debuginfo=:none bar(A, B)
-
 # ╔═╡ e117e215-63b2-4a4a-a80d-76c00453b04e
 md"""
 ## Package management
@@ -813,44 +631,6 @@ md"""
 * Type-stable code is fast code. Use [`@code_warntype`](https://docs.julialang.org/en/v1/manual/performance-tips/#man-code-warntype-1) and [`Test.@inferred`](https://docs.julialang.org/en/v1/stdlib/Test/#Test.@inferred) to check!
 * In some situations, closures [can be troublesome](https://docs.julialang.org/en/v1/manual/performance-tips/#man-performance-captured-1), using `let` can help the compiler"""
 
-# ╔═╡ ca78ed7d-7b04-435e-8d0b-44dd69fccb49
-md"""
-This is efficient (not runtime reflection):"""
-
-# ╔═╡ d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
-half_dynrange(T::Type{<:Number}) = (Int(typemax(T)) - Int(typemin(T))) / 2;
-
-# ╔═╡ 0e6af487-0bb3-4e6f-aa9c-8fe5aff98219
-half_dynrange(Int16)
-
-# ╔═╡ 43e5fe19-63d1-4b62-b654-85b62bdf66c7
-@code_llvm half_dynrange(Int16)
-
-# ╔═╡ 2c38ce67-c44c-4dfa-b5e8-157be5593d9a
-md"""
-## Shared-memory parallelism
-
-* Julia has native multithreading support
-
-* Simple cases: Use `@threads` macro
-
-* Since Julia v1.3: Cache-efficient [composable multi-threaded parallelism](https://julialang.org/blog/2019/07/multithreading/)"""
-
-# ╔═╡ f962af6e-6f6a-4edf-b4d4-d59b95db7315
-md"""
-## Processes, Clusters, MPI
-
-* Julia brings a full API for remote processes and compute clusters
-
-* Native support for local processes and remote processes via SSH, SLURM, MPI, ...
-"""
-
-# ╔═╡ 9afcf0ae-951a-44d7-b8e6-dbe58062b8cf
-md"""
-## Benchmarking and profiling, digging deeper
-
-Demo"""
-
 # ╔═╡ e5a1dcd9-cc13-4c0d-953c-a87245dbf975
 md"""
 ## Docs and help
@@ -867,106 +647,6 @@ md"""
 
 * [Julia on Youtube](https://www.youtube.com/user/JuliaLanguage)
 """
-
-# ╔═╡ 0f13def9-9f6b-41ed-bfd5-c72066e2e651
-md"""
-## Visualization/Plotting: Plots, Makie, plotting recipes"""
-
-# ╔═╡ 55567c61-1d16-4415-87c4-20778e05533e
-md"""
-## Let's Make a Plot"""
-
-# ╔═╡ 0d0353b1-bed3-496e-8f7a-a3c52bb418ea
-Plots.gr(size = (400,300));
-
-# ╔═╡ 8f8349d7-a150-41cc-8e51-7a0853824443
-begin
-    x_range = -π:0.01:π
-    plot(x_range, sin.(x_range) + rand(length(x_range)))
-end
-
-# ╔═╡ 076d772e-1220-4e2e-8696-7c512e8c8928
-md"""
-## Histograms are easy, too"""
-
-# ╔═╡ 68e607e6-ec96-4c99-ba40-930bc24fc3a2
-stephist(rand(dist, 10^4), size = (400, 300))
-
-# ╔═╡ ad607724-a401-445b-ab8c-e87f1c3f4d05
-md"""
-## Talking to Python
-
-Calling Python from Julia is easy, can even use inline Python code:
-"""
-
-# ╔═╡ c464df43-d8fd-4909-a22f-3d00038eb96c
-numpy = pyimport("numpy")
-
-# ╔═╡ 66003d1e-57f8-4517-9827-32fc7eb7425e
-numpy.zeros(5) isa Array
-
-# ╔═╡ 0c4410e1-1a78-4015-a372-5ac1b072cf02
-A_jl = rand(5);
-
-# ╔═╡ a959204e-cf65-419d-91ed-628271367aa6
-py"""type($A_jl)""" isa PyObject
-
-# ╔═╡ f041e729-818e-4d90-9499-06f4c66d5a66
-md"""
-## Automatic differentiation
-
-Let's define a simple neural network layer and loss function and auto-differentiate through it."""
-
-# ╔═╡ bcd308e3-5595-452e-864c-75876ebb2d7e
-begin
-	struct DenseLayer{
-		M<:AbstractMatrix{<:Real}, V<:AbstractVector{<:Real}, F<:Function
-	} <: Function
-		A::M
-		b::V
-		f::F
-	end
-	
-	(l::DenseLayer)(x::AbstractVector{<:Real}) = (l.f).(l.A * x + l.b)
-end
-
-# ╔═╡ 356f23fd-d347-4b9e-9f53-609c03ba73b4
-md"""
-## Instantiating the layer
-"""
-
-# ╔═╡ da5dc5e5-c733-4b05-9e7d-2c27863742a0
-f_loss(y) = sum(y .^ 2);
-
-# ╔═╡ 948e4086-363f-45a3-b365-8895f8bda2d9
-relu(x) = ifelse(x > zero(x), x, zero(x));
-
-# ╔═╡ 3345ae31-ca00-4fe2-99bb-7782afac08f7
-mylayer = DenseLayer(rand(5,5), rand(5), relu);
-
-# ╔═╡ 1b53cb2c-5e99-4048-804b-a6476992f4be
-md"""
-## Evaluating and gradients
-"""
-
-# ╔═╡ cdfa9259-c085-42a4-8dae-00e523018d34
-begin
-    x = rand(5)
-    mylayer(x)
-end
-
-# ╔═╡ 3d78a62c-dc97-4fbc-ba79-73bd183473a2
-begin
-    using Zygote
-    g = Zygote.gradient((mylayer, x) -> f_loss(mylayer(x)), mylayer, x)
-    g[1].A
-end
-
-# ╔═╡ 9f5b2e51-0ce8-45af-9aa6-ca8eb2265be1
-f_loss(mylayer(x))
-
-# ╔═╡ f5928c6a-e50c-4909-9d04-47f1b5337061
-g[1].b
 
 # ╔═╡ f869f8f9-586f-4f0e-8e46-e3c42796445e
 md"""
@@ -1007,13 +687,6 @@ Increase `n_iterations` from `10^3` to `10^4` or to `10^5` to show "almost conne
 # ╔═╡ d11fd6d2-7b71-45d2-8856-2e8315417376
 md"""
 ## Interactive Julia-Set plots
-"""
-
-# ╔═╡ b1e6c795-0749-4f9c-865e-a43fca0992b1
-md"""
-```julia
-use_cuda, c_re, c_im =
-```
 """
 
 # ╔═╡ 40394f1c-2c7d-4309-b9d4-3c2b4f55db99
@@ -1200,8 +873,6 @@ md"""
 * Julia is productive, fast and fun - give it a chance!
 
 * Multiple dispatch opens up powerful ways of combining code
-
-* Upcoming event [CHEP 2024](https://indico.cern.ch/event/1338689/) with a Julia plenary talk an several other Julia-related talks
 """
 
 # ╔═╡ Cell order:
@@ -1209,21 +880,11 @@ md"""
 # ╟─c3850185-e3be-401a-a3e0-5036ab88c071
 # ╟─be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
 # ╟─2c3033a3-f9a6-445e-9b85-c013734fa299
-# ╟─3d67632f-2e27-4d74-86ac-6851079cb5fd
-# ╟─e92bdc7e-92bf-4534-baf3-bda98136689a
-# ╟─7f016f40-1f3f-44d4-8e74-cd596c8acbd8
 # ╟─ea08384d-79a6-48e1-a893-0bb0f8134c9c
 # ╟─efb5333b-f5e4-4ca3-8664-11c277d4f24b
 # ╟─84196e50-44c8-4f77-9f23-b87234efce4d
-# ╟─b8113ef0-4126-49ba-b57c-ada2da42696a
-# ╟─45c86bad-8692-4d5b-9cea-d2a0a12a0fc1
 # ╟─efecd9a4-94af-494d-b63d-91a4ccf3357d
 # ╟─9633ccf3-ec6f-4cb2-aaa1-0aab71c3c160
-# ╟─c0bbf02e-2315-46be-953f-095c2fcaeca4
-# ╟─1b7696a4-124f-4bee-b967-b2ecfcee35a4
-# ╟─613a920a-1fcc-4b09-b6f8-7181d43c572d
-# ╟─cd8d42d6-fd19-4478-b038-a66ccd2131d2
-# ╟─553560a1-9874-4d27-9fcc-305ecd433a5d
 # ╟─00191462-4c08-471b-a817-d534cad5012b
 # ╠═06fa27f2-2f7a-4495-a479-8ae98d6ea215
 # ╠═e02b4c51-e14e-4ad0-bdf4-0d344966e827
@@ -1249,9 +910,6 @@ md"""
 # ╟─3c2858f4-97bd-42ef-a1ff-45d8e3101d96
 # ╠═05837a64-d61a-40f1-b4c9-0fcc8592a732
 # ╟─0272e720-03d4-45b0-b615-aaef019bec7f
-# ╟─93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
-# ╠═bc4af845-12ce-47f6-9320-a7372a5c5892
-# ╠═79af3ef2-a18e-41c5-bffb-c1a452592204
 # ╟─bc7710c5-8638-4039-99ef-a411964a12c5
 # ╠═3a95425b-f714-49c4-b11f-8b087806b57b
 # ╠═ea5769cf-41ba-42cd-baa0-6e6843b50d00
@@ -1271,47 +929,11 @@ md"""
 # ╠═f965b60e-b0d4-4908-b2a8-c956fcb85157
 # ╟─703dc474-d4ab-45cb-a1b0-a1cde30d311d
 # ╠═05d3b4b6-e0aa-4db0-bc5b-6e7f710a3551
-# ╟─eb1c9614-daf3-4a86-b056-52581bd0b07c
-# ╠═1d256fff-72c5-4057-928d-9cb0bbef572d
-# ╟─558799cf-c133-4558-ba3e-7ecafd9ce62e
-# ╠═2f673b0f-69c4-4954-a2d5-4166ad01c9f1
 # ╟─e117e215-63b2-4a4a-a80d-76c00453b04e
 # ╟─65d1344c-75be-4f96-959c-542c601c53da
 # ╟─a81d2d19-5789-4c63-bfde-59399dcf57ab
 # ╟─b699c7a6-5bbf-42fe-91b6-764ee8134389
-# ╟─ca78ed7d-7b04-435e-8d0b-44dd69fccb49
-# ╠═d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
-# ╠═0e6af487-0bb3-4e6f-aa9c-8fe5aff98219
-# ╠═43e5fe19-63d1-4b62-b654-85b62bdf66c7
-# ╟─2c38ce67-c44c-4dfa-b5e8-157be5593d9a
-# ╟─f962af6e-6f6a-4edf-b4d4-d59b95db7315
-# ╟─9afcf0ae-951a-44d7-b8e6-dbe58062b8cf
 # ╟─e5a1dcd9-cc13-4c0d-953c-a87245dbf975
-# ╟─0f13def9-9f6b-41ed-bfd5-c72066e2e651
-# ╟─55567c61-1d16-4415-87c4-20778e05533e
-# ╠═1174e4de-7433-49ec-bf8e-8b4dbed1728c
-# ╠═0d0353b1-bed3-496e-8f7a-a3c52bb418ea
-# ╠═8f8349d7-a150-41cc-8e51-7a0853824443
-# ╟─076d772e-1220-4e2e-8696-7c512e8c8928
-# ╟─5f661f5c-8072-43d7-8202-f0214058041a
-# ╠═68e607e6-ec96-4c99-ba40-930bc24fc3a2
-# ╟─ad607724-a401-445b-ab8c-e87f1c3f4d05
-# ╠═19deea61-306c-43cd-bae7-0dd49647cb08
-# ╠═c464df43-d8fd-4909-a22f-3d00038eb96c
-# ╠═66003d1e-57f8-4517-9827-32fc7eb7425e
-# ╠═0c4410e1-1a78-4015-a372-5ac1b072cf02
-# ╠═a959204e-cf65-419d-91ed-628271367aa6
-# ╟─f041e729-818e-4d90-9499-06f4c66d5a66
-# ╠═bcd308e3-5595-452e-864c-75876ebb2d7e
-# ╟─356f23fd-d347-4b9e-9f53-609c03ba73b4
-# ╠═da5dc5e5-c733-4b05-9e7d-2c27863742a0
-# ╠═948e4086-363f-45a3-b365-8895f8bda2d9
-# ╠═3345ae31-ca00-4fe2-99bb-7782afac08f7
-# ╟─1b53cb2c-5e99-4048-804b-a6476992f4be
-# ╠═cdfa9259-c085-42a4-8dae-00e523018d34
-# ╠═9f5b2e51-0ce8-45af-9aa6-ca8eb2265be1
-# ╠═3d78a62c-dc97-4fbc-ba79-73bd183473a2
-# ╟─f5928c6a-e50c-4909-9d04-47f1b5337061
 # ╟─f869f8f9-586f-4f0e-8e46-e3c42796445e
 # ╠═d4b37b8e-3b58-42e0-90e0-e7827d325355
 # ╠═ee20ed92-3101-492d-8a9e-4b6ffe548919
@@ -1322,7 +944,6 @@ md"""
 # ╟─9f31536e-9d94-4e46-ad1f-b96a0e04524e
 # ╠═aa2547fa-86a1-4777-9106-f19c58ac4fac
 # ╟─d11fd6d2-7b71-45d2-8856-2e8315417376
-# ╟─b1e6c795-0749-4f9c-865e-a43fca0992b1
 # ╟─40394f1c-2c7d-4309-b9d4-3c2b4f55db99
 # ╟─8d8fbb75-ad99-4a78-9476-e1f388217fef
 # ╠═d5191740-521c-4913-94bb-ca3d55f01d12
@@ -1339,4 +960,4 @@ md"""
 # ╟─07056b96-74a1-4ac3-80ee-2cb99ec674ec
 # ╟─944441ed-90b1-43c6-9217-913a75e6c9ef
 # ╟─c862d3e8-ff7e-441f-a13f-f1489204abcb
-# ╠═eaca8f4e-1e10-420a-abfb-f53f8f786e96
+# ╟─eaca8f4e-1e10-420a-abfb-f53f8f786e96
