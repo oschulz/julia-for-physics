@@ -1,17 +1,19 @@
 ### A Pluto.jl notebook ###
-# v0.19.42
+# v0.20.3
 
 using Markdown
 using InteractiveUtils
 
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
+    #! format: off
     quote
         local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
+    #! format: on
 end
 
 # ╔═╡ 6af6b562-e920-4975-b253-c169ab58456e
@@ -118,7 +120,7 @@ using BAT
 </div>
 
 <p style="text-align: center;"> 
-	<em>Physikalisches Institut der Universität Bonn, June 2024</em>
+	<em>TUM, November 2024</em>
 </p>"""
 
 # ╔═╡ be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
@@ -259,7 +261,7 @@ md"""
 * Covers the whole wish-list
 * Clear focus on user productivity and software quality
 * Rapid growth of user base and software packages
-* Current version: Julia v1.8 (v1.9 release candidate available)"""
+* Current version: Julia v1.11"""
 
 # ╔═╡ efecd9a4-94af-494d-b63d-91a4ccf3357d
 md"""
@@ -368,16 +370,6 @@ Bayesian inference of longitudinal and radial impurity profiles from CV-measurem
 md"""
 [EPJ-C 2023,  https://doi.org/10.1140/epjc/s10052-023-11509-8]
 """
-
-# ╔═╡ 32319453-3892-4562-aacb-32b6cd174413
-md"""
-## Sneak preview: SolidStateDetectors.jl + Geant4.jl
-
-Simulating particle transport and detector response in one go.
-"""
-
-# ╔═╡ b66440e7-a575-4044-b142-5fad005141dc
-@htl """<img alt="(Julia)" src="$(ssd_electron_shower.src)" style="width: 70%; display: block; margin: 0em;"/>"""
 
 # ╔═╡ cd8d42d6-fd19-4478-b038-a66ccd2131d2
 md"""
@@ -493,14 +485,16 @@ but we may need to handle complex numbers differently:
 f(A::AbstractMatrix{<:Complex}) = do_something_else_with(A)
 ```
 
-Julia makes this easy.
+Julia makes this easy!
+
+Semantics: `AbstractMatrix{<:Real} == AbstractMatrix{T} where {T<:Real}` is the set of all matrix types that have the element type parameter set to an element of the set of all real number types.
 """
 
 # ╔═╡ 72a72497-dac1-4c4f-ae12-b67dee6cf8f3
 md"""
 ## Type aliases and union types
 
-Type aliases are just const values:
+Type aliases are basically just const values:
 
 ```julia
 const Abstract2DArray{T} = AbstractArray{T,2}
@@ -581,7 +575,10 @@ condition ? result_if_true : result_if_false
 
 ```julia
 ifelse(condition, result_if_true, result_if_false)
-```"""
+```
+
+All of these can return a value!
+"""
 
 # ╔═╡ c8c6806e-0333-4498-afdb-4f0e2c492698
 md"""
@@ -730,6 +727,19 @@ foo(x::Integer, y::Number) = x * y
 # ╔═╡ ea5769cf-41ba-42cd-baa0-6e6843b50d00
 foo(x::Integer, y::AbstractString) = join(fill(y, x))
 
+# ╔═╡ 146caca6-0abe-4b7c-9338-55ae46d1555e
+foo(3, 4)
+
+# ╔═╡ 181e6357-88dd-4311-98fd-b677d4c23498
+foo(3, "abc")
+
+# ╔═╡ 1827c0ed-32c3-4a8a-a75c-ac32bda032c1
+try
+	foo(4.5, 3)
+catch err
+	@error err
+end
+
 # ╔═╡ c7df5aab-44bf-47fc-822b-2c1dbcce5910
 md"""
 ## Functional Programming"""
@@ -782,18 +792,9 @@ md"""
 
 # ╔═╡ 1d256fff-72c5-4057-928d-9cb0bbef572d
 begin
-    foo(X, Y) = (X .+ Y) .^ 2
-    @code_llvm raw=false debuginfo=:none foo(A, B)
+    bcsqadd(X, Y) = (X .+ Y) .^ 2
+    @code_llvm raw=false debuginfo=:none bcsqadd(A, B)
 end
-
-# ╔═╡ 146caca6-0abe-4b7c-9338-55ae46d1555e
-foo(3, 4)
-
-# ╔═╡ 181e6357-88dd-4311-98fd-b677d4c23498
-foo(3, "abc")
-
-# ╔═╡ 1827c0ed-32c3-4a8a-a75c-ac32bda032c1
-foo(4.5, 3)
 
 # ╔═╡ 558799cf-c133-4558-ba3e-7ecafd9ce62e
 md"""
@@ -801,7 +802,7 @@ md"""
 """
 
 # ╔═╡ 2f673b0f-69c4-4954-a2d5-4166ad01c9f1
-@code_native debuginfo=:none foo(A, B)
+@code_native debuginfo=:none bcsqadd(A, B)
 
 # ╔═╡ e117e215-63b2-4a4a-a80d-76c00453b04e
 md"""
@@ -842,7 +843,7 @@ md"""
 md"""
 ## No free lunch
 
-* Package loading and code-gen can sometime some time, 
+* Package loading and code-gen can take some time, 
   but mitigations available:
 
 * [Revise.jl](https://github.com/timholy/Revise.jl): Hot code-reloading at runtime
@@ -1175,7 +1176,7 @@ function fwd_model(t_obs::AbstractVector{<:Real}, pars::NamedTuple)
 		saveat = t_obs
 	)
 	x_expected = sol[1, :]
-	σ_noise = 0.1
+	σ_noise = 0.05
 	return MvNormal(x_expected, σ_noise)
 end;
 
@@ -1194,7 +1195,7 @@ p_truth = (x0 = 1.0, v0 = 0.0, k = 5.0, c = 0.5);
 x_obs = rand(fwd_model(t_obs, p_truth));
 
 # ╔═╡ bc9516a5-b468-4d75-be44-9b3799f0fa7a
-scatter(t_obs, x_obs)
+scatter(t_obs, x_obs, ms = 2, msw = 0)
 
 # ╔═╡ 1de01956-f6fd-4c5a-b52a-63ef9a6bd807
 md"""
@@ -1205,7 +1206,7 @@ md"""
 ℒ = Likelihood(p -> fwd_model(t_obs, p), x_obs);
 
 # ╔═╡ 7af24c6d-f2c5-4e6a-9024-28c4fc905ae9
-p_init = (x0 = 0.1, v0 = 0.0, k = 1.0, c = 1.0);
+p_init = (x0 = 1.2, v0 = 0.1, k = 4.7, c = 1.0);
 
 # ╔═╡ 43591cce-aafe-4197-8ba4-21b83ae27441
 logdensityof(ℒ, p_init)
@@ -1224,8 +1225,19 @@ f_opt = logdensityof(ℒ) ∘ p_ctor;
 # ╔═╡ 3734e7ca-d81c-43e5-8b61-f62e6ce7e45d
 opt_result = Optim.maximize(ℒ ∘ p_ctor, collect(p_init))
 
+# ╔═╡ 2ff860e6-acd6-4a13-adef-dad8a828cf50
+md"""
+## Maximum-Likelihood fit result
+"""
+
 # ╔═╡ 1a4971df-e8c2-41e0-8391-95d2ab027f2e
 p_max_likelihood = p_ctor(Optim.maximizer(opt_result))
+
+# ╔═╡ 9de46360-8ce9-4f43-a812-98711f5eadbb
+begin
+scatter(t_obs, x_obs, ms = 2, msw = 0, label = "obs")
+plot!(t_obs, mean(fwd_model(t_obs, p_max_likelihood)), label = "max-likelihood")
+end
 
 # ╔═╡ 341af4fe-fecd-4a44-bbde-126cb4e9421c
 md"""
@@ -1260,6 +1272,17 @@ posterior = lbqintegral(ℒ, prior);
 
 # ╔═╡ ab0105e7-b943-46a4-97d9-92c99cbabd2e
 p_max_postior = bat_findmode(posterior, BATContext()).result
+
+# ╔═╡ 29522a10-4cd6-4136-9049-08e5102b16d7
+md"""
+## MAP fit result
+"""
+
+# ╔═╡ 71733b22-c501-4c69-b847-12b51bd32ef6
+begin
+scatter(t_obs, x_obs, ms = 2, msw = 0, label = "obs")
+plot!(t_obs, mean(fwd_model(t_obs, p_max_postior)), label = "MAP")
+end
 
 # ╔═╡ 437bdbfd-6e29-461f-885a-d47428c3b6cf
 md"""
@@ -1337,6 +1360,7 @@ md"""
 * [ForwardDiff.jl](https://github.com/JuliaDiff/ForwardDiff.jl): Forward-mode automatic differentiation
 * [Zyote.jl](https://github.com/FluxML/Zygote.jl): Source-level reverse-mode automatic differentiation
 * [Enzyme.jl](https://github.com/wsmoses/Enzyme.jl): LLVM-level reverse-mode automatic differentiation
+* [Mooncake.jl](https://github.com/compintell/Mooncake.jl) (WIP): Source-level reverse AD
 * Several other packages available ([ReverseDiff.jl](https://github.com/JuliaDiff/ReverseDiff.jl), [Nabla.jl](https://github.com/invenia/Nabla.jl), [Yota.jl](https://github.com/dfdx/Yota.jl), ...)
 * Exciting developements to come with new Julia Compiler features"""
 
@@ -1406,6 +1430,23 @@ md"""
 * Plugins for many other code editors
 """
 
+# ╔═╡ 96943c41-778a-4353-a842-f930ea083dda
+md"""
+## Learning Julia
+
+* [Official "Getting started with Julia" site](https://julialang.org/learning/)
+
+* [Julia language documentation](https://docs.julialang.org/en/v1/)
+
+* [The Fast Track to Julia (cheat sheet)](https://juliadocs.github.io/Julia-Cheat-Sheet/)
+
+* [Intro to Julia, by Jane Herriman (video)](https://www.youtube.com/watch?v=8h8rQyEpiZA&t)
+
+* [Modern Julia Workflows (online book)](https://modernjuliaworkflows.github.io/)
+
+* [Think Julia, by Ben Lauwens (online book)](https://benlauwens.github.io/ThinkJulia.jl/latest/book.html)
+"""
+
 # ╔═╡ eaca8f4e-1e10-420a-abfb-f53f8f786e96
 md"""
 ## Summary
@@ -1414,9 +1455,7 @@ md"""
 
 * Multiple dispatch opens up powerful ways of combining code
 
-* Upcoming events:
-    * [JuliaCon 2024, July 9th–13th, Eindhoven](https://juliacon.org/2024/)
-    * [JuliaHEP 2024, September 30th to October 4th, CERN](https://indico.cern.ch/event/1410341/)
+* Try it out!
 """
 
 # ╔═╡ Cell order:
@@ -1443,8 +1482,6 @@ md"""
 # ╟─b3688ced-cb0b-4f53-b313-f7d67338df73
 # ╟─1516fed7-c9cf-431f-8b2d-d36251d41c8e
 # ╟─14e64691-f1b7-4090-89dc-dcbfdfaffd36
-# ╟─32319453-3892-4562-aacb-32b6cd174413
-# ╟─b66440e7-a575-4044-b142-5fad005141dc
 # ╟─cd8d42d6-fd19-4478-b038-a66ccd2131d2
 # ╟─553560a1-9874-4d27-9fcc-305ecd433a5d
 # ╟─00191462-4c08-471b-a817-d534cad5012b
@@ -1503,7 +1540,7 @@ md"""
 # ╟─a81d2d19-5789-4c63-bfde-59399dcf57ab
 # ╟─b699c7a6-5bbf-42fe-91b6-764ee8134389
 # ╟─ca78ed7d-7b04-435e-8d0b-44dd69fccb49
-# ╟─d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
+# ╠═d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
 # ╟─43e5fe19-63d1-4b62-b654-85b62bdf66c7
 # ╟─864c1724-e4a4-43f0-836f-985729e334c5
 # ╟─2c38ce67-c44c-4dfa-b5e8-157be5593d9a
@@ -1547,7 +1584,7 @@ md"""
 # ╟─d11fd6d2-7b71-45d2-8856-2e8315417376
 # ╟─b1e6c795-0749-4f9c-865e-a43fca0992b1
 # ╟─40394f1c-2c7d-4309-b9d4-3c2b4f55db99
-# ╟─8d8fbb75-ad99-4a78-9476-e1f388217fef
+# ╠═8d8fbb75-ad99-4a78-9476-e1f388217fef
 # ╠═d5191740-521c-4913-94bb-ca3d55f01d12
 # ╟─4aba92af-a16b-4623-8a74-7ecc489e9634
 # ╟─c49929f6-28c5-4789-9f8a-ea3936d8984c
@@ -1579,7 +1616,9 @@ md"""
 # ╠═b4f141bf-cb0f-4c97-b3e2-3dbddf0f220e
 # ╠═3a6352fb-e71a-4aad-a3b5-7741b5e6985e
 # ╠═3734e7ca-d81c-43e5-8b61-f62e6ce7e45d
+# ╟─2ff860e6-acd6-4a13-adef-dad8a828cf50
 # ╠═1a4971df-e8c2-41e0-8391-95d2ab027f2e
+# ╟─9de46360-8ce9-4f43-a812-98711f5eadbb
 # ╟─341af4fe-fecd-4a44-bbde-126cb4e9421c
 # ╠═3de1ba1c-2acc-41c5-b463-a69fcfc86509
 # ╠═1eb7e3cb-93bc-428d-aea6-6d2287ed37a4
@@ -1589,6 +1628,8 @@ md"""
 # ╠═4de83290-7872-432e-a4f3-727004a5c733
 # ╠═18442b1e-909e-4969-8bb5-630230616cfe
 # ╠═ab0105e7-b943-46a4-97d9-92c99cbabd2e
+# ╟─29522a10-4cd6-4136-9049-08e5102b16d7
+# ╠═71733b22-c501-4c69-b847-12b51bd32ef6
 # ╟─437bdbfd-6e29-461f-885a-d47428c3b6cf
 # ╟─74603261-3b3b-4128-8ddc-a79511c1ca16
 # ╟─ec31832a-36d7-484d-8a1d-fc3c3abe4990
@@ -1601,4 +1642,5 @@ md"""
 # ╟─07056b96-74a1-4ac3-80ee-2cb99ec674ec
 # ╟─944441ed-90b1-43c6-9217-913a75e6c9ef
 # ╟─c862d3e8-ff7e-441f-a13f-f1489204abcb
+# ╟─96943c41-778a-4353-a842-f930ea083dda
 # ╟─eaca8f4e-1e10-420a-abfb-f53f8f786e96
