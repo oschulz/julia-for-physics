@@ -1,6 +1,13 @@
 ### A Pluto.jl notebook ###
 # v0.20.3
 
+#> [frontmatter]
+#> title = "Julia for Physics (and Physicists)"
+#> 
+#>     [[frontmatter.author]]
+#>     name = "Oliver Schulz"
+#>     affiliation = "Max Planck Institute for Physics"
+
 using Markdown
 using InteractiveUtils
 
