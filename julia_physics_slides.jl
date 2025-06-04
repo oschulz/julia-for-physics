@@ -1222,7 +1222,10 @@ p_ctor = NamedTuple{propertynames(p_init)}
 f_opt = logdensityof(ℒ) ∘ p_ctor;
 
 # ╔═╡ 3734e7ca-d81c-43e5-8b61-f62e6ce7e45d
-opt_result = Optim.maximize(ℒ ∘ p_ctor, collect(p_init))
+opt_result = Optim.maximize(log ∘ ℒ ∘ p_ctor, collect(p_init));
+
+# ╔═╡ c039595f-7a93-458b-8e47-e044d652987c
+opt_result.res
 
 # ╔═╡ 2ff860e6-acd6-4a13-adef-dad8a828cf50
 md"""
@@ -1610,6 +1613,7 @@ md"""
 # ╠═b4f141bf-cb0f-4c97-b3e2-3dbddf0f220e
 # ╠═3a6352fb-e71a-4aad-a3b5-7741b5e6985e
 # ╠═3734e7ca-d81c-43e5-8b61-f62e6ce7e45d
+# ╠═c039595f-7a93-458b-8e47-e044d652987c
 # ╟─2ff860e6-acd6-4a13-adef-dad8a828cf50
 # ╠═1a4971df-e8c2-41e0-8391-95d2ab027f2e
 # ╟─9de46360-8ce9-4f43-a812-98711f5eadbb
