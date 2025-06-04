@@ -696,28 +696,6 @@ Multiplication is also defined for vectors, so this works, too:"""
 # ╔═╡ 05837a64-d61a-40f1-b4c9-0fcc8592a732
 f(4.2, [1, 2, 3, 4])
 
-# ╔═╡ 0272e720-03d4-45b0-b615-aaef019bec7f
-md"""
-## Julia compiler flow
-
-1) Julia Code (`@less`, `@which`, `@edit`)
-2) Julia AST (`@code_lowered`)
-3) Julia typed IR (`@code_typed`)
-4) LLVM IR (`@code_llvm`)
-4) Native assembly code (`@code_native`)
-5) Binary machine code
-"""
-
-# ╔═╡ 93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
-md"""
-## Let's Look Under the Hood"""
-
-# ╔═╡ bc4af845-12ce-47f6-9320-a7372a5c5892
-@code_llvm debuginfo=:none f(20, 2.1)
-
-# ╔═╡ 79af3ef2-a18e-41c5-bffb-c1a452592204
-@code_native debuginfo=:none f(20, 2.1)
-
 # ╔═╡ bc7710c5-8638-4039-99ef-a411964a12c5
 md"""
 ## Multiple Dispatch"""
@@ -786,6 +764,28 @@ Shorter broadcast syntax:
 
 # ╔═╡ 05d3b4b6-e0aa-4db0-bc5b-6e7f710a3551
 (A .+ B) .^ 2
+
+# ╔═╡ 0272e720-03d4-45b0-b615-aaef019bec7f
+md"""
+## Julia compiler flow
+
+1) Julia Code (`@less`, `@which`, `@edit`)
+2) Julia AST (`@code_lowered`)
+3) Julia typed IR (`@code_typed`)
+4) LLVM IR (`@code_llvm`)
+4) Native assembly code (`@code_native`)
+5) Binary machine code
+"""
+
+# ╔═╡ 93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
+md"""
+## Let's Look Under the Hood"""
+
+# ╔═╡ bc4af845-12ce-47f6-9320-a7372a5c5892
+@code_llvm debuginfo=:none f(20, 2.1)
+
+# ╔═╡ 79af3ef2-a18e-41c5-bffb-c1a452592204
+@code_native debuginfo=:none f(20, 2.1)
 
 # ╔═╡ eb1c9614-daf3-4a86-b056-52581bd0b07c
 md"""
@@ -863,6 +863,8 @@ md"""
 
 # ╔═╡ ca78ed7d-7b04-435e-8d0b-44dd69fccb49
 md"""
+## Types as first-class values
+
 This is efficient (not runtime reflection):"""
 
 # ╔═╡ d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
@@ -1510,10 +1512,6 @@ md"""
 # ╠═d27c43a3-cf78-4b1f-bda7-e761f63e2b08
 # ╟─3c2858f4-97bd-42ef-a1ff-45d8e3101d96
 # ╠═05837a64-d61a-40f1-b4c9-0fcc8592a732
-# ╟─0272e720-03d4-45b0-b615-aaef019bec7f
-# ╟─93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
-# ╠═bc4af845-12ce-47f6-9320-a7372a5c5892
-# ╠═79af3ef2-a18e-41c5-bffb-c1a452592204
 # ╟─bc7710c5-8638-4039-99ef-a411964a12c5
 # ╠═3a95425b-f714-49c4-b11f-8b087806b57b
 # ╠═ea5769cf-41ba-42cd-baa0-6e6843b50d00
@@ -1533,17 +1531,21 @@ md"""
 # ╠═f965b60e-b0d4-4908-b2a8-c956fcb85157
 # ╟─703dc474-d4ab-45cb-a1b0-a1cde30d311d
 # ╠═05d3b4b6-e0aa-4db0-bc5b-6e7f710a3551
+# ╟─0272e720-03d4-45b0-b615-aaef019bec7f
+# ╟─93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
+# ╠═bc4af845-12ce-47f6-9320-a7372a5c5892
+# ╠═79af3ef2-a18e-41c5-bffb-c1a452592204
 # ╟─eb1c9614-daf3-4a86-b056-52581bd0b07c
 # ╠═1d256fff-72c5-4057-928d-9cb0bbef572d
 # ╟─558799cf-c133-4558-ba3e-7ecafd9ce62e
 # ╠═2f673b0f-69c4-4954-a2d5-4166ad01c9f1
+# ╠═ca78ed7d-7b04-435e-8d0b-44dd69fccb49
+# ╠═d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
+# ╟─43e5fe19-63d1-4b62-b654-85b62bdf66c7
 # ╟─e117e215-63b2-4a4a-a80d-76c00453b04e
 # ╟─65d1344c-75be-4f96-959c-542c601c53da
 # ╟─a81d2d19-5789-4c63-bfde-59399dcf57ab
 # ╟─b699c7a6-5bbf-42fe-91b6-764ee8134389
-# ╟─ca78ed7d-7b04-435e-8d0b-44dd69fccb49
-# ╠═d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
-# ╟─43e5fe19-63d1-4b62-b654-85b62bdf66c7
 # ╟─864c1724-e4a4-43f0-836f-985729e334c5
 # ╟─2c38ce67-c44c-4dfa-b5e8-157be5593d9a
 # ╟─f962af6e-6f6a-4edf-b4d4-d59b95db7315
