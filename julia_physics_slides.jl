@@ -106,10 +106,10 @@ using BAT
 
 <div style="text-align: center;">
     <p style="text-align: center; display: inline-block; vertical-align: middle;">
-        Oliver Schulz<br>
+        Oliver Schulz, Ricarda Riepen<br>
         <small>
             Max Planck Institute for Physics <br/>
-            <a href="mailto:oschulz@mpp.mpg.de" target="_blank">oschulz@mpp.mpg.de</a>
+            <a href="mailto:oschulz@mpp.mpg.de" target="_blank">oschulz@mpp.mpg.de, riepen@mpp.mpg.de</a>
         </small>
     </p>
 </div>
@@ -121,7 +121,7 @@ using BAT
 </div>
 
 <p style="text-align: center;"> 
-	<em>TUM, November 2024</em>
+	<em>Advanced Programming Concepts 2025, June 2025</em>
 </p>"""
 
 # ╔═╡ be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
