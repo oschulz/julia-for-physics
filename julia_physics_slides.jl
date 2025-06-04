@@ -14,7 +14,7 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     #! format: off
-    quote
+    return quote
         local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
         global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
@@ -73,9 +73,6 @@ begin
     using Distributions
     dist = Normal(0.0, 5.0)
 end
-
-# ╔═╡ 19deea61-306c-43cd-bae7-0dd49647cb08
-using PyCall
 
 # ╔═╡ d4b37b8e-3b58-42e0-90e0-e7827d325355
 using Colors, ColorSchemes, Images
@@ -956,17 +953,15 @@ md"""
 Calling Python from Julia is easy, can even use inline Python code:
 """
 
-# ╔═╡ c464df43-d8fd-4909-a22f-3d00038eb96c
+# ╔═╡ 19deea61-306c-43cd-bae7-0dd49647cb08
+md"""
+```julia
+using PyCall
 numpy = pyimport("numpy")
-
-# ╔═╡ 66003d1e-57f8-4517-9827-32fc7eb7425e
-numpy.zeros(5) isa Array
-
-# ╔═╡ 0c4410e1-1a78-4015-a372-5ac1b072cf02
 A_jl = rand(5);
-
-# ╔═╡ a959204e-cf65-419d-91ed-628271367aa6
-py"""type($A_jl)""" isa PyObject
+py"type($A_jl)" isa PyObject
+```
+"""
 
 # ╔═╡ f041e729-818e-4d90-9499-06f4c66d5a66
 md"""
@@ -1560,11 +1555,7 @@ md"""
 # ╟─5f661f5c-8072-43d7-8202-f0214058041a
 # ╠═68e607e6-ec96-4c99-ba40-930bc24fc3a2
 # ╟─ad607724-a401-445b-ab8c-e87f1c3f4d05
-# ╠═19deea61-306c-43cd-bae7-0dd49647cb08
-# ╠═c464df43-d8fd-4909-a22f-3d00038eb96c
-# ╠═66003d1e-57f8-4517-9827-32fc7eb7425e
-# ╠═0c4410e1-1a78-4015-a372-5ac1b072cf02
-# ╠═a959204e-cf65-419d-91ed-628271367aa6
+# ╟─19deea61-306c-43cd-bae7-0dd49647cb08
 # ╟─f041e729-818e-4d90-9499-06f4c66d5a66
 # ╠═bcd308e3-5595-452e-864c-75876ebb2d7e
 # ╟─356f23fd-d347-4b9e-9f53-609c03ba73b4
