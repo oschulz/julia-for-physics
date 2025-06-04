@@ -80,9 +80,6 @@ using PyCall
 # ╔═╡ d4b37b8e-3b58-42e0-90e0-e7827d325355
 using Colors, ColorSchemes, Images
 
-# ╔═╡ ee20ed92-3101-492d-8a9e-4b6ffe548919
-using CUDA # Take this out if you don't want to install and load CUDA:
-
 # ╔═╡ 330e7511-92bd-43b8-bebb-2f9678f30c3f
 using OrdinaryDiffEq
 
@@ -1082,7 +1079,7 @@ use_cuda, c_re, c_im =
 @bind(c_im, Slider(range(-1.5, 1.5, length = 1000); default = 0.147))
 
 # ╔═╡ d5191740-521c-4913-94bb-ca3d55f01d12
-MyArray = use_cuda ? CuArray : Array;
+MyArray = use_cuda ? eval(:(import CUDA; CUDA.CuArray)) : Array;
 
 # ╔═╡ 4aba92af-a16b-4623-8a74-7ecc489e9634
 begin
@@ -1581,7 +1578,6 @@ md"""
 # ╟─f5928c6a-e50c-4909-9d04-47f1b5337061
 # ╟─f869f8f9-586f-4f0e-8e46-e3c42796445e
 # ╠═d4b37b8e-3b58-42e0-90e0-e7827d325355
-# ╠═ee20ed92-3101-492d-8a9e-4b6ffe548919
 # ╟─52e08586-7943-4964-b317-a2de065287dd
 # ╠═e21be748-ccca-486d-a262-9c23cb5da89e
 # ╟─d52e66ab-fe4b-46fb-8a8c-42e4e6a431c2
