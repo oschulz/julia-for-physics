@@ -73,22 +73,6 @@ possible demos:
 """
 
 # ╔═╡ d7acdc6c-9744-40ad-832f-1891af5c79e8
-
-
-# ╔═╡ 8b475534-add3-43fb-8e5a-7f30a8dd5bba
-md"""
-## Parametric types
-
-- instead of setting concrete types as arguments -> setting Sets of types (abstract types)
-
-- can also be written like {T} where {T<:Real}
-
-"""
-
-# ╔═╡ 68fc4ce6-5e95-41d5-8ab5-d05633fbcf10
-
-
-# ╔═╡ a38feca7-df70-497e-8845-acca031c1099
 begin
 	abstract type Animal end
 	
@@ -104,6 +88,111 @@ begin
 	
 end
 
+# ╔═╡ 8b475534-add3-43fb-8e5a-7f30a8dd5bba
+md"""
+## Parametric types
+
+- instead of setting concrete types as arguments -> setting Sets of types (abstract types)
+
+- can also be written like {T} where {T<:Real}
+
+"""
+
+# ╔═╡ 02625656-1dfc-4fd0-9cc9-7425e56f52cb
+md"""
+## Loops
+# for loop
+- loop variable
+- range
+- do something
+
+# while loop
+- condition
+
+"""
+
+# ╔═╡ 4b578208-643d-4a14-8340-251d7da57aa6
+
+
+# ╔═╡ 86f97597-8250-4fcd-91a5-4ef78c4293bb
+
+
+# ╔═╡ 68fc4ce6-5e95-41d5-8ab5-d05633fbcf10
+md"""
+## Array comprehension and generators
+
+- first: makes an actual array
+- second: generates values on the fly only when you ask for them
+
+syntax: 
+- some function
+- for loop 
+
+"""
+
+# ╔═╡ af0be913-e901-4b26-908b-00d318af9911
+begin
+	array = [x^2 for x in 1:2]
+	generator = (x^2 for x in 1:2)
+	collect(generator) # makes then an array
+	sum(generator) # sums up elements
+	
+end
+
+# ╔═╡ 965f0cbb-8f34-4d5c-8516-284615d258eb
+md"""
+## Multiple Dispatch
+
+remember analogy of nouns and verbs
+
+more methods can be written without owning the specific types/objects 
+
+chooses methods depending on Types of all arguments and not just the first
+
+"""
+
+# ╔═╡ 59cecd6b-5669-473d-a8ed-c92e5d22054a
+begin
+
+	abstract type food end
+	
+	struct Meat <: food end
+	struct Fish <: food end
+	struct Veggies <: food end
+	struct SideDish <: food end
+
+	function cook(::Meat, ::SideDish)
+	    println("carnivor")
+	end
+	
+	function cook(::Fish, ::SideDish)
+	    println("pescitarian")
+	end
+	
+	function cook(::Veggies, ::SideDish)
+	    println("vegan")
+	end
+
+	brokkoli = Veggies()
+	steak = Meat()
+	sprout = Fish()
+	rise = SideDish()
+	
+	cook(brokkoli, rise)    # prints "vegan"
+	cook(sprout, rise)    # prints "pescitarian"
+	cook(steak, rise)    # prints "canivor"
+
+end
+
+
+# ╔═╡ 25899019-3f81-4616-ac50-ca65723752b4
+md"""
+You take a function (an action), and apply it to every item in a collection — like every number in a list — automatically and efficiently.
+"""
+
+# ╔═╡ a38feca7-df70-497e-8845-acca031c1099
+
+
 # ╔═╡ 2f9d34f1-ab52-4a30-9a46-03eb2eeadc37
 
 
@@ -113,6 +202,34 @@ end
 # ╔═╡ 4d2429f5-e38d-49de-977d-6a12f70ddc3e
 
 
+# ╔═╡ 4568332b-a89d-4d2c-8592-b27b15007f62
+begin
+	numbers = 1:10
+	new_numbers = []
+
+	for i in numbers
+		 push!(new_numbers, i + 10)
+	end
+	println(new_numbers)
+
+	j = 1
+	while j < 4
+		println(j) 
+		j += 1
+	end
+
+	while true
+		#do something
+	end
+	
+end
+
+# ╔═╡ 7675aa80-252a-4892-94c2-ad0448701479
+begin 
+	new_numbers = numbers .+ 10   # The dot before + means "broadcast"
+	println(new_numbers)          # [11, 12, 13, 14]
+end
+
 # ╔═╡ Cell order:
 # ╟─7cdcec20-418e-11f0-2f63-d790037ca168
 # ╟─d6754e29-0c73-4e8a-b397-a77bcc9750a7
@@ -120,7 +237,16 @@ end
 # ╟─53076759-3290-4024-a709-9f14620c7378
 # ╠═d7acdc6c-9744-40ad-832f-1891af5c79e8
 # ╟─8b475534-add3-43fb-8e5a-7f30a8dd5bba
-# ╠═68fc4ce6-5e95-41d5-8ab5-d05633fbcf10
+# ╠═02625656-1dfc-4fd0-9cc9-7425e56f52cb
+# ╠═4b578208-643d-4a14-8340-251d7da57aa6
+# ╠═4568332b-a89d-4d2c-8592-b27b15007f62
+# ╠═86f97597-8250-4fcd-91a5-4ef78c4293bb
+# ╟─68fc4ce6-5e95-41d5-8ab5-d05633fbcf10
+# ╠═af0be913-e901-4b26-908b-00d318af9911
+# ╠═965f0cbb-8f34-4d5c-8516-284615d258eb
+# ╠═59cecd6b-5669-473d-a8ed-c92e5d22054a
+# ╠═25899019-3f81-4616-ac50-ca65723752b4
+# ╠═7675aa80-252a-4892-94c2-ad0448701479
 # ╠═a38feca7-df70-497e-8845-acca031c1099
 # ╠═2f9d34f1-ab52-4a30-9a46-03eb2eeadc37
 # ╠═85d9e794-485d-4b69-aeeb-368a170c5fd0
