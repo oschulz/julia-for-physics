@@ -25,10 +25,13 @@ end
 
 # ╔═╡ 6af6b562-e920-4975-b253-c169ab58456e
 begin
+	import Logging
+	Logging.disable_logging(Logging.Info)
+
 	import Pkg; Pkg.activate(".")
-	
+
 	using PlutoUI, HypertextLiteral# PlutoStyles
-		
+
 	julia_logo = PlutoUI.LocalResource("images/logos/julia-logo.svg")
 	mpg_logo = PlutoUI.LocalResource("images/logos/mpg-logo.svg")
 	mpp_logo = PlutoUI.LocalResource("images/logos/mpp-logo.svg")
@@ -36,7 +39,7 @@ begin
 	detcap_impurity_measurement = PlutoUI.LocalResource("images/figures/detcap-impurity-measurement.svg")
 	parton_posterior = PlutoUI.LocalResource("images/figures/parton-posterior.svg")
 	ssd_electron_shower = PlutoUI.LocalResource("images/figures/ssd_electron_shower.gif")
-	
+
 	html"""
 		<style>
 		input[type*="range"] { width: 100%; }
@@ -91,6 +94,9 @@ using ForwardDiff
 
 # ╔═╡ 7c406d14-d8d5-499c-9fa0-a8fba23c3d1e
 using BAT
+
+# ╔═╡ d47af10e-fabe-454e-9de6-abd95c23de98
+Logging.disable_logging(Logging.Debug);
 
 # ╔═╡ c3850185-e3be-401a-a3e0-5036ab88c071
 @htl """
@@ -805,6 +811,21 @@ md"""
 # ╔═╡ 2f673b0f-69c4-4954-a2d5-4166ad01c9f1
 @code_native debuginfo=:none bcsqadd(A, B)
 
+# ╔═╡ ca78ed7d-7b04-435e-8d0b-44dd69fccb49
+md"""
+## Types as first-class values
+
+This is efficient (not runtime reflection):"""
+
+# ╔═╡ d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
+begin
+    half_dynrange(T::Type{<:Number}) = (Int(typemax(T)) - Int(typemin(T))) / 2
+    half_dynrange(Int16)
+end
+
+# ╔═╡ 43e5fe19-63d1-4b62-b654-85b62bdf66c7
+@code_llvm half_dynrange(Int16)
+
 # ╔═╡ e117e215-63b2-4a4a-a80d-76c00453b04e
 md"""
 ## Package management
@@ -860,21 +881,6 @@ md"""
 * Do *not* call on (non-const) global variables from time-critical code
 * Type-stable code is fast code. Use [`@code_warntype`](https://docs.julialang.org/en/v1/manual/performance-tips/#man-code-warntype-1) and [`Test.@inferred`](https://docs.julialang.org/en/v1/stdlib/Test/#Test.@inferred) to check!
 * In some situations, closures [can be troublesome](https://docs.julialang.org/en/v1/manual/performance-tips/#man-performance-captured-1), using `let` can help the compiler"""
-
-# ╔═╡ ca78ed7d-7b04-435e-8d0b-44dd69fccb49
-md"""
-## Types as first-class values
-
-This is efficient (not runtime reflection):"""
-
-# ╔═╡ d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
-begin
-    half_dynrange(T::Type{<:Number}) = (Int(typemax(T)) - Int(typemin(T))) / 2
-    half_dynrange(Int16)
-end
-
-# ╔═╡ 43e5fe19-63d1-4b62-b654-85b62bdf66c7
-@code_llvm half_dynrange(Int16)
 
 # ╔═╡ 864c1724-e4a4-43f0-836f-985729e334c5
 md"""
@@ -1464,6 +1470,7 @@ md"""
 
 # ╔═╡ Cell order:
 # ╟─6af6b562-e920-4975-b253-c169ab58456e
+# ╟─d47af10e-fabe-454e-9de6-abd95c23de98
 # ╟─c3850185-e3be-401a-a3e0-5036ab88c071
 # ╟─be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
 # ╟─2c3033a3-f9a6-445e-9b85-c013734fa299
@@ -1541,7 +1548,7 @@ md"""
 # ╠═2f673b0f-69c4-4954-a2d5-4166ad01c9f1
 # ╠═ca78ed7d-7b04-435e-8d0b-44dd69fccb49
 # ╠═d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
-# ╟─43e5fe19-63d1-4b62-b654-85b62bdf66c7
+# ╠═43e5fe19-63d1-4b62-b654-85b62bdf66c7
 # ╟─e117e215-63b2-4a4a-a80d-76c00453b04e
 # ╟─65d1344c-75be-4f96-959c-542c601c53da
 # ╟─a81d2d19-5789-4c63-bfde-59399dcf57ab
@@ -1583,7 +1590,7 @@ md"""
 # ╟─d11fd6d2-7b71-45d2-8856-2e8315417376
 # ╟─b1e6c795-0749-4f9c-865e-a43fca0992b1
 # ╟─40394f1c-2c7d-4309-b9d4-3c2b4f55db99
-# ╠═8d8fbb75-ad99-4a78-9476-e1f388217fef
+# ╟─8d8fbb75-ad99-4a78-9476-e1f388217fef
 # ╠═d5191740-521c-4913-94bb-ca3d55f01d12
 # ╟─4aba92af-a16b-4623-8a74-7ecc489e9634
 # ╟─c49929f6-28c5-4789-9f8a-ea3936d8984c
