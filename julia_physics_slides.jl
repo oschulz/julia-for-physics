@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.9
+# v0.20.20
 
 #> [frontmatter]
 #> title = "Julia for Physics (and Physicists)"
@@ -112,10 +112,10 @@ Logging.disable_logging(Logging.Debug);
 
 <div style="text-align: center;">
     <p style="text-align: center; display: inline-block; vertical-align: middle;">
-        Oliver Schulz, Ricarda Riepen<br>
+        Oliver Schulz<br>
         <small>
             Max Planck Institute for Physics <br/>
-            <a href="mailto:oschulz@mpp.mpg.de" target="_blank">oschulz@mpp.mpg.de, riepen@mpp.mpg.de</a>
+            <a href="mailto:oschulz@mpp.mpg.de" target="_blank">oschulz@mpp.mpg.de</a>
         </small>
     </p>
 </div>
@@ -127,7 +127,7 @@ Logging.disable_logging(Logging.Debug);
 </div>
 
 <p style="text-align: center;"> 
-	<em>Advanced Programming Concepts 2025, June 2025</em>
+	<em>November 2025</em>
 </p>"""
 
 # ╔═╡ be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
@@ -268,7 +268,7 @@ md"""
 * Covers the whole wish-list
 * Clear focus on user productivity and software quality
 * Rapid growth of user base and software packages
-* Current version: Julia v1.11"""
+* Current version: Julia v1.12"""
 
 # ╔═╡ efecd9a4-94af-494d-b63d-91a4ccf3357d
 md"""
@@ -343,9 +343,9 @@ md"""
 
 * *Do not (at least not yet)* use Julia for (non-computational) web apps, etc., use Go or Node.js
 
-* *Do not (at least not yet)* use Julia for big machine learning with standard building blocks (LLMs, etc.), use Python frameworks
+* *Do not (at least not yet)* use Julia for large-scale machine learning with standard building blocks (LLMs, etc.), use Python frameworks
 
-* *Do* try Julia for custom machine learning that mixes physics models and ML blocks
+* *Do* try Julia for smaller-scale ML and especially for custom machine learning that mixes physics models and ML blocks
 """
 
 # ╔═╡ 473cebe1-fb2d-4d4c-b56a-632707b3345a
@@ -1378,11 +1378,11 @@ md"""
 md"""
 ## Machine learning
 
-* [Lux.jl](https://github.com/LuxDL/Lux.jl)
+* [Lux.jl](https://github.com/LuxDL/Lux.jl): current go-to choice for ML in Julia
 
 * [SimpleChains.jl](https://github.com/PumasAI/SimpleChains.jl)
 
-* [Flux.jl](https://github.com/FluxML/Flux.jl): Julia native deep learning library
+* [Flux.jl](https://github.com/FluxML/Flux.jl)
 
 * ...
 
@@ -1564,10 +1564,10 @@ md"""
 # ╠═0d0353b1-bed3-496e-8f7a-a3c52bb418ea
 # ╠═8f8349d7-a150-41cc-8e51-7a0853824443
 # ╟─076d772e-1220-4e2e-8696-7c512e8c8928
-# ╟─5f661f5c-8072-43d7-8202-f0214058041a
+# ╠═5f661f5c-8072-43d7-8202-f0214058041a
 # ╠═68e607e6-ec96-4c99-ba40-930bc24fc3a2
 # ╟─ad607724-a401-445b-ab8c-e87f1c3f4d05
-# ╟─19deea61-306c-43cd-bae7-0dd49647cb08
+# ╠═19deea61-306c-43cd-bae7-0dd49647cb08
 # ╟─f041e729-818e-4d90-9499-06f4c66d5a66
 # ╠═bcd308e3-5595-452e-864c-75876ebb2d7e
 # ╟─356f23fd-d347-4b9e-9f53-609c03ba73b4
@@ -1591,7 +1591,7 @@ md"""
 # ╟─b1e6c795-0749-4f9c-865e-a43fca0992b1
 # ╟─40394f1c-2c7d-4309-b9d4-3c2b4f55db99
 # ╟─8d8fbb75-ad99-4a78-9476-e1f388217fef
-# ╠═d5191740-521c-4913-94bb-ca3d55f01d12
+# ╟─d5191740-521c-4913-94bb-ca3d55f01d12
 # ╟─4aba92af-a16b-4623-8a74-7ecc489e9634
 # ╟─c49929f6-28c5-4789-9f8a-ea3936d8984c
 # ╠═1309cae9-07d9-48ed-9259-7549e8d354ff
