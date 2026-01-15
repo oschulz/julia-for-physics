@@ -36,7 +36,6 @@ begin
 	mpg_logo = PlutoUI.LocalResource("images/logos/mpg-logo.svg")
 	mpp_logo = PlutoUI.LocalResource("images/logos/mpp-logo.svg")
 
-	prog_language_evolution = PlutoUI.LocalResource("images/figures/prog-language-evolution.jpg")
 	still_compiling = PlutoUI.LocalResource("images/figures/xkcd-303-compiling.png")
 	detcap_impurity_measurement = PlutoUI.LocalResource("images/figures/detcap-impurity-measurement.svg")
 	parton_posterior = PlutoUI.LocalResource("images/figures/parton-posterior.svg")
@@ -264,19 +263,6 @@ md"""
   (Ruby has a dirty way, Scala a clean workaround)
 * If you have programming experience, you have felt this, even if you didn't name it
 * Result: Packages tend not to compose well
-"""
-
-# ╔═╡ 89d6904c-21f6-4027-adf2-64bafdc52380
-md"""# Languages have evolved, but ..."""
-
-# ╔═╡ 2a9e475d-c960-4d1d-9cd0-9636090ef704
-@htl """<img alt="(Julia)" src="$(prog_language_evolution.src)" style="width: 100%; display: block; margin: 0em;"/>"""
-
-# ╔═╡ 35c8b57c-daa4-4e04-b194-dc06b29dfdb1
-md"""
-**Disclaimers:**
-* This is a very selective and prejudiced. In reality, all of these have their place.
-* This is about the languages themselves - the Python community and package ecosystem are great!
 """
 
 # ╔═╡ b8113ef0-4126-49ba-b57c-ada2da42696a
@@ -1846,9 +1832,6 @@ md"""
 # ╟─ea08384d-79a6-48e1-a893-0bb0f8134c9c
 # ╟─efb5333b-f5e4-4ca3-8664-11c277d4f24b
 # ╟─84196e50-44c8-4f77-9f23-b87234efce4d
-# ╟─89d6904c-21f6-4027-adf2-64bafdc52380
-# ╟─2a9e475d-c960-4d1d-9cd0-9636090ef704
-# ╟─35c8b57c-daa4-4e04-b194-dc06b29dfdb1
 # ╟─b8113ef0-4126-49ba-b57c-ada2da42696a
 # ╟─45c86bad-8692-4d5b-9cea-d2a0a12a0fc1
 # ╟─efecd9a4-94af-494d-b63d-91a4ccf3357d
@@ -1856,7 +1839,7 @@ md"""
 # ╟─f628677a-b611-4a15-be83-d0516a4a6fea
 # ╟─74ebf893-d92c-4163-bf05-a011adbd3ae3
 # ╟─a81d2d19-5789-4c63-bfde-59399dcf57ab
-# ╠═c0bbf02e-2315-46be-953f-095c2fcaeca4
+# ╟─c0bbf02e-2315-46be-953f-095c2fcaeca4
 # ╟─1b7696a4-124f-4bee-b967-b2ecfcee35a4
 # ╟─613a920a-1fcc-4b09-b6f8-7181d43c572d
 # ╟─473cebe1-fb2d-4d4c-b56a-632707b3345a
