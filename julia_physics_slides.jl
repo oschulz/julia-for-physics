@@ -111,12 +111,6 @@ using DensityInterface, MeasureBase
 # ╔═╡ 3a6352fb-e71a-4aad-a3b5-7741b5e6985e
 using Optim
 
-# ╔═╡ 3de1ba1c-2acc-41c5-b463-a69fcfc86509
-using ForwardDiff
-
-# ╔═╡ 7c406d14-d8d5-499c-9fa0-a8fba23c3d1e
-using BAT
-
 # ╔═╡ d47af10e-fabe-454e-9de6-abd95c23de98
 Logging.disable_logging(Logging.Debug);
 
@@ -1061,6 +1055,10 @@ md"""
 ... of dual numbers (forward-mode automatic differentiation):
 """
 
+# ╔═╡ 3bbbdeb4-97d5-4c4e-bf4f-9d4745b34d97
+eforce(src::Multipole, trg::Multipole, r::NumVector) =
+	- gradient(r -> epot(src, trg, r), r);
+
 # ╔═╡ 70d563ee-41e7-48d4-a2ee-959a94cee2f7
 md"""
 # StaticArrays
@@ -1157,6 +1155,33 @@ epot(Monopole(1), Monopole(1), [r_sym...])
 function eforce(src::Multipole, trg::Multipole, r::AbstractVector{Num})
     [Symbolics.derivative(epot(src, trg, [r...]), r_i) for r_i in [r...]]
 end
+
+# ╔═╡ 4f914448-652a-4fe0-9c61-4ff83d21674c
+eforce(Monopole(e), Monopole(e), [1e-10, 0, 0])
+
+# ╔═╡ d1bc9057-596a-4d71-8830-f4d8e45b1bf5
+eforce(Monopole(e), Dipole([0, p_H₂O, 0]), [1e-10, 0, 0])
+
+# ╔═╡ fbeb7896-6211-4c24-ae55-b05f67a630d2
+eforce(Dipole([0, p_H₂O, 0]), Dipole([0, p_H₂O, 0]), [1e-10, 0, 0])
+
+# ╔═╡ f7ca8107-212c-4a11-9226-4374224779a0
+mdforce(r) = eforce(Monopole(Float32(e)), Dipole(Vec3(0, Float32(p_H₂O), 0)), r);
+
+# ╔═╡ 32355e1d-41f6-4195-9eb5-1323f9984b83
+mdforce.(R)
+
+# ╔═╡ 3c242d93-9eaf-4e67-ad34-12275dfaeef0
+@benchmark sum(mdforce.($R))
+
+# ╔═╡ 8e1dbbe3-484a-4139-913b-bccce87452fb
+typeof(mdforce.(R_ondev))
+
+# ╔═╡ 8f15157c-1fb5-4ef0-988c-f3a7d162b5eb
+@benchmark sum(mdforce.($R_ondev))
+
+# ╔═╡ 7085c6bd-a0d5-41b4-9d7c-aed6e3f9f95e
+eforce(Monopole(1), Monopole(1), r_sym)
 
 # ╔═╡ e117e215-63b2-4a4a-a80d-76c00453b04e
 md"""
@@ -1298,94 +1323,6 @@ A_jl = rand(5);
 py"type($A_jl)" isa PyObject
 ```
 """
-
-# ╔═╡ f041e729-818e-4d90-9499-06f4c66d5a66
-md"""
-## Automatic differentiation
-
-Let's define a simple neural network layer and loss function and auto-differentiate through it."""
-
-# ╔═╡ bcd308e3-5595-452e-864c-75876ebb2d7e
-begin
-	struct ADenseLayer{
-		M<:AbstractMatrix{<:Real},V<:AbstractVector{<:Real},F<:Function
-	} <: Function
-		A::M
-		b::V
-		f::F
-	end
-	
-	(l::ADenseLayer)(x::AbstractVector{<:Real}) = (l.f).(l.A * x + l.b)
-end
-
-# ╔═╡ 356f23fd-d347-4b9e-9f53-609c03ba73b4
-md"""
-## Instantiating the layer
-"""
-
-# ╔═╡ da5dc5e5-c733-4b05-9e7d-2c27863742a0
-f_loss(y) = sum(y .^ 2);
-
-# ╔═╡ 948e4086-363f-45a3-b365-8895f8bda2d9
-relu(x) = ifelse(x > zero(x), x, zero(x));
-
-# ╔═╡ 3345ae31-ca00-4fe2-99bb-7782afac08f7
-mylayer = ADenseLayer(rand(5,5), rand(5), relu);
-
-# ╔═╡ 1b53cb2c-5e99-4048-804b-a6476992f4be
-md"""
-## Evaluating and gradients
-"""
-
-# ╔═╡ cdfa9259-c085-42a4-8dae-00e523018d34
-begin
-    x = rand(5)
-    mylayer(x)
-end
-
-# ╔═╡ 3d78a62c-dc97-4fbc-ba79-73bd183473a2
-begin
-    using Zygote
-    g = Zygote.gradient((mylayer, x) -> f_loss(mylayer(x)), mylayer, x)
-    g[1].A
-end
-
-# ╔═╡ 3bbbdeb4-97d5-4c4e-bf4f-9d4745b34d97
-eforce(src::Multipole, trg::Multipole, r::NumVector) =
-	- gradient(r -> epot(src, trg, r), r);
-
-# ╔═╡ 4f914448-652a-4fe0-9c61-4ff83d21674c
-eforce(Monopole(e), Monopole(e), [1e-10, 0, 0])
-
-# ╔═╡ d1bc9057-596a-4d71-8830-f4d8e45b1bf5
-eforce(Monopole(e), Dipole([0, p_H₂O, 0]), [1e-10, 0, 0])
-
-# ╔═╡ fbeb7896-6211-4c24-ae55-b05f67a630d2
-eforce(Dipole([0, p_H₂O, 0]), Dipole([0, p_H₂O, 0]), [1e-10, 0, 0])
-
-# ╔═╡ f7ca8107-212c-4a11-9226-4374224779a0
-mdforce(r) = eforce(Monopole(Float32(e)), Dipole(Vec3(0, Float32(p_H₂O), 0)), r);
-
-# ╔═╡ 32355e1d-41f6-4195-9eb5-1323f9984b83
-mdforce.(R)
-
-# ╔═╡ 3c242d93-9eaf-4e67-ad34-12275dfaeef0
-@benchmark sum(mdforce.($R))
-
-# ╔═╡ 8e1dbbe3-484a-4139-913b-bccce87452fb
-typeof(mdforce.(R_ondev))
-
-# ╔═╡ 8f15157c-1fb5-4ef0-988c-f3a7d162b5eb
-@benchmark sum(mdforce.($R_ondev))
-
-# ╔═╡ 7085c6bd-a0d5-41b4-9d7c-aed6e3f9f95e
-eforce(Monopole(1), Monopole(1), r_sym)
-
-# ╔═╡ 9f5b2e51-0ce8-45af-9aa6-ca8eb2265be1
-f_loss(mylayer(x))
-
-# ╔═╡ f5928c6a-e50c-4909-9d04-47f1b5337061
-g[1].b
 
 # ╔═╡ f869f8f9-586f-4f0e-8e46-e3c42796445e
 md"""
@@ -1608,51 +1545,6 @@ scatter(t_obs, x_obs, ms = 2, msw = 0, label = "obs")
 plot!(t_obs, mean(fwd_model(t_obs, p_max_likelihood)), label = "max-likelihood")
 end
 
-# ╔═╡ 341af4fe-fecd-4a44-bbde-126cb4e9421c
-md"""
-## Parameter uncertainly and correlation estimate
-"""
-
-# ╔═╡ 1eb7e3cb-93bc-428d-aea6-6d2287ed37a4
-p_Σ = inv(ForwardDiff.hessian(f_opt, Optim.maximizer(opt_result)))
-
-# ╔═╡ 5d8a815b-88fd-4f56-894d-9558e480a09b
-md"""
-Can also use reverse-mode AD:
-
-```julia
-import SciMLSensitivity
-inv(Zygote.hessian(f_opt, Optim.maximizer(opt_result)))
-```
-"""
-
-# ╔═╡ 7e7f9cfc-6b1c-4c12-9ceb-393d057e8072
-md"""
-## Bayesian maxmium posterior (MAP)
-"""
-
-# ╔═╡ 4de83290-7872-432e-a4f3-727004a5c733
-prior = BAT.distprod((
-	x0 = Normal(0, 1), v0 = Normal(0, 1), k = Exponential(3.0), c = Exponential(0.5)
-));
-
-# ╔═╡ 18442b1e-909e-4969-8bb5-630230616cfe
-posterior = lbqintegral(ℒ, prior);
-
-# ╔═╡ ab0105e7-b943-46a4-97d9-92c99cbabd2e
-p_max_postior = bat_findmode(posterior, BATContext()).result
-
-# ╔═╡ 29522a10-4cd6-4136-9049-08e5102b16d7
-md"""
-## MAP fit result
-"""
-
-# ╔═╡ 71733b22-c501-4c69-b847-12b51bd32ef6
-begin
-scatter(t_obs, x_obs, ms = 2, msw = 0, label = "obs")
-plot!(t_obs, mean(fwd_model(t_obs, p_max_postior)), label = "MAP")
-end
-
 # ╔═╡ 437bdbfd-6e29-461f-885a-d47428c3b6cf
 md"""
 ## An incomplete tour of the Julia package ecosystem"""
@@ -1847,7 +1739,7 @@ md"""
 # ╟─f628677a-b611-4a15-be83-d0516a4a6fea
 # ╟─74ebf893-d92c-4163-bf05-a011adbd3ae3
 # ╟─a81d2d19-5789-4c63-bfde-59399dcf57ab
-# ╠═c0bbf02e-2315-46be-953f-095c2fcaeca4
+# ╟─c0bbf02e-2315-46be-953f-095c2fcaeca4
 # ╟─1b7696a4-124f-4bee-b967-b2ecfcee35a4
 # ╟─613a920a-1fcc-4b09-b6f8-7181d43c572d
 # ╟─473cebe1-fb2d-4d4c-b56a-632707b3345a
@@ -2008,17 +1900,6 @@ md"""
 # ╠═68e607e6-ec96-4c99-ba40-930bc24fc3a2
 # ╟─ad607724-a401-445b-ab8c-e87f1c3f4d05
 # ╟─19deea61-306c-43cd-bae7-0dd49647cb08
-# ╟─f041e729-818e-4d90-9499-06f4c66d5a66
-# ╠═bcd308e3-5595-452e-864c-75876ebb2d7e
-# ╟─356f23fd-d347-4b9e-9f53-609c03ba73b4
-# ╠═da5dc5e5-c733-4b05-9e7d-2c27863742a0
-# ╠═948e4086-363f-45a3-b365-8895f8bda2d9
-# ╠═3345ae31-ca00-4fe2-99bb-7782afac08f7
-# ╟─1b53cb2c-5e99-4048-804b-a6476992f4be
-# ╠═cdfa9259-c085-42a4-8dae-00e523018d34
-# ╠═9f5b2e51-0ce8-45af-9aa6-ca8eb2265be1
-# ╠═3d78a62c-dc97-4fbc-ba79-73bd183473a2
-# ╟─f5928c6a-e50c-4909-9d04-47f1b5337061
 # ╟─f869f8f9-586f-4f0e-8e46-e3c42796445e
 # ╠═d4b37b8e-3b58-42e0-90e0-e7827d325355
 # ╟─52e08586-7943-4964-b317-a2de065287dd
@@ -2066,17 +1947,6 @@ md"""
 # ╟─2ff860e6-acd6-4a13-adef-dad8a828cf50
 # ╠═1a4971df-e8c2-41e0-8391-95d2ab027f2e
 # ╟─9de46360-8ce9-4f43-a812-98711f5eadbb
-# ╟─341af4fe-fecd-4a44-bbde-126cb4e9421c
-# ╠═3de1ba1c-2acc-41c5-b463-a69fcfc86509
-# ╠═1eb7e3cb-93bc-428d-aea6-6d2287ed37a4
-# ╟─5d8a815b-88fd-4f56-894d-9558e480a09b
-# ╟─7e7f9cfc-6b1c-4c12-9ceb-393d057e8072
-# ╠═7c406d14-d8d5-499c-9fa0-a8fba23c3d1e
-# ╠═4de83290-7872-432e-a4f3-727004a5c733
-# ╠═18442b1e-909e-4969-8bb5-630230616cfe
-# ╠═ab0105e7-b943-46a4-97d9-92c99cbabd2e
-# ╟─29522a10-4cd6-4136-9049-08e5102b16d7
-# ╠═71733b22-c501-4c69-b847-12b51bd32ef6
 # ╟─437bdbfd-6e29-461f-885a-d47428c3b6cf
 # ╟─74603261-3b3b-4128-8ddc-a79511c1ca16
 # ╟─ec31832a-36d7-484d-8a1d-fc3c3abe4990
