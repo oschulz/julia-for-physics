@@ -167,64 +167,13 @@ md"""
 
 # ╔═╡ 3d67632f-2e27-4d74-86ac-6851079cb5fd
 md"""
-## Programming Language Options
+## Current programming languages (for us)
 
-* C++:
-    * Pro: Very fast (in expert hands)
-    * Pro: Really cool new concepts (even literally) in C++11/14/17/...
-    * Con: Complex, takes long time to learn and much longer to master
-    * Con: Straightforward tasks often result in lengthy code
-    * Con: No memory management (General protection faults)  
-    * Con: No universal package management
-    * Con: Composability isn't great
+* FORTRAN: Tons of legacy (and not so legacy) code we're still using
+* C++: When we need to be fast
+* Python: When we want convenience and fast development
+* Javascript, Go, etc.: For specialized use cases
 """
-
-# ╔═╡ e92bdc7e-92bf-4534-baf3-bda98136689a
-md"""
-## Programming Language Options
-
-* Python:
-    * Pro: Broad user base, popular first programming language
-    * Pro: Easy to learn, good standard library
-    * Con: Can't write time-critical loops in Python,  
-      workarounds like Numba/Cython have
-      [many limitations](http://www.stochasticlifestyle.com/why-numba-and-cython-are-not-substitutes-for-julia/),  
-      don't compose well
-    * Con: Language itself fairly primitive, not very expressive
-    * Con: Duck-Typing necessitates lots of test code
-    * Con: No effective multi-threading
-    * Con: Composability isn't great
-"""
-
-# ╔═╡ 7f016f40-1f3f-44d4-8e74-cd596c8acbd8
-md"""
-## What else is there?
-
-* Fortran:
-    * Pro: Math can be really fast
-    * Con: Old language, few modern concepts
-    * Con: Shrinking user base
-    * Con: Composability isn't great
-    * Do you *really* want to ...?
-
-
-* Scala, Go, Kotlin etc.:
-    * Pro: Lots of individual strengths
-    * Con: Math either fast *or* generic *or* or complicated
-    * Con: Calling C, Fortran or Phython code often difficult
-    * Con: Composability isn't great
-"""
-
-# ╔═╡ ea08384d-79a6-48e1-a893-0bb0f8134c9c
-md"""
-## The 97 and the 3 Percent
-
-> We should forget about small efficiencies, say about 97% of the time: *premature optimization is the root of all evil. Yet we should not pass up our opportunities in that critical 3%*.
-
-Donald E. Knuth
-
-* Some programming languages (e.g. Python) great for the 97% - but can't make the 3% fast.
-* Some other languages (e.g. C/C++, Fortran) can handle the 3% - but makes the 97% complicated."""
 
 # ╔═╡ efb5333b-f5e4-4ca3-8664-11c277d4f24b
 md"""
@@ -1726,9 +1675,6 @@ md"""
 # ╟─be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
 # ╟─2c3033a3-f9a6-445e-9b85-c013734fa299
 # ╟─3d67632f-2e27-4d74-86ac-6851079cb5fd
-# ╟─e92bdc7e-92bf-4534-baf3-bda98136689a
-# ╟─7f016f40-1f3f-44d4-8e74-cd596c8acbd8
-# ╟─ea08384d-79a6-48e1-a893-0bb0f8134c9c
 # ╟─efb5333b-f5e4-4ca3-8664-11c277d4f24b
 # ╟─84196e50-44c8-4f77-9f23-b87234efce4d
 # ╟─35c8b57c-daa4-4e04-b194-dc06b29dfdb1
