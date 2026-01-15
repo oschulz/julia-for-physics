@@ -143,7 +143,7 @@ Logging.disable_logging(Logging.Debug);
 </div>
 
 <p style="text-align: center;"> 
-	<em>January 2026</em>
+	<em>PUNCHLunch, January 15th 2026</em>
 </p>"""
 
 # ╔═╡ be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
