@@ -933,22 +933,8 @@ struct Monopole{T<:Real} <: Multipole
     q::T
 end
 
-# ╔═╡ a7c2630f-4e7f-4fdd-becd-23d40d693b71
-md"""
-# Preserving numerical precision
-"""
-
-# ╔═╡ 0c24d0b0-e5e4-4938-991d-87dba8b3229d
-epot_not_great(a::Monopole, b::Monopole, r::NumVector) = kₑ * (a.q * b.q) / norm(r);
-
-# ╔═╡ 616cdf55-a19b-456b-b239-eab4c64e8bca
-typeof(1.0f0)
-
-# ╔═╡ 3722a2a6-a49a-4f67-8651-09e7504d4496
-typeof( epot_not_great(Monopole(1), Monopole(1), [1.0f0, 0.0f0, 0.0f0]) )
-
 # ╔═╡ 63019cd9-1ceb-4c47-a236-9daf5f21491c
-⋄(k::Real, x::T) where {T<:Real} = float(T)(k) * x
+⋄(k::Real, x::T) where {T<:Real} = float(T)(k) * x;
 
 # ╔═╡ 918cbb32-da1d-4e66-8b69-f2966e9a3d78
 epot(a::Monopole, b::Monopole, r::NumVector) = kₑ ⋄ ((a.q * b.q) / norm(r));
@@ -978,9 +964,6 @@ function epot(a::Dipole, b::Dipole, r::NumVector)
     
     return kₑ ⋄ (p_dot_p / rn^3 - 3 * p_r_coupling / rn^5)
 end
-
-# ╔═╡ 127934a0-3674-4890-b464-d01e8db26606
-typeof( epot(Monopole(1), Monopole(1), [1.0f0, 0.0f0, 0.0f0]) )
 
 # ╔═╡ 5be314a6-30e5-4f8b-8b48-706391df0751
 md"""
@@ -1773,13 +1756,8 @@ md"""
 # ╠═64bab154-2ea3-4791-8389-258fde40445d
 # ╠═be25fac4-fde3-4ad1-b2f1-a6c9be79a7c6
 # ╠═20529b9c-aa29-4f58-b43c-79a2fa372133
-# ╟─a7c2630f-4e7f-4fdd-becd-23d40d693b71
-# ╠═0c24d0b0-e5e4-4938-991d-87dba8b3229d
-# ╠═616cdf55-a19b-456b-b239-eab4c64e8bca
-# ╠═3722a2a6-a49a-4f67-8651-09e7504d4496
 # ╠═63019cd9-1ceb-4c47-a236-9daf5f21491c
 # ╠═918cbb32-da1d-4e66-8b69-f2966e9a3d78
-# ╠═127934a0-3674-4890-b464-d01e8db26606
 # ╟─f7b5e8ab-f544-4646-9bfa-eace52f29dba
 # ╠═a9363a5e-e172-473d-84be-0a49523b928d
 # ╠═9702c79c-d787-489a-aaf5-56a33ee8f855
