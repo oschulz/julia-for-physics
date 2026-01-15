@@ -1457,6 +1457,23 @@ end
 md"""
 ## An incomplete tour of the Julia package ecosystem"""
 
+# ╔═╡ b739d526-0d9e-4e15-bc04-5b7362b7e6cd
+md"""
+## High-energy physics and friends
+
+* [Geant4.jl](https://github.com/JuliaHEP/Geant4.jl): Geant4 wrapper
+
+* [ROOT.jl](https://github.com/JuliaHEP/ROOT.jl): ROOT wrapper (still rough edges!)
+
+* [UnROOT.jl](https://github.com/JuliaHEP/UnROOT.jl): pure Julia ROOT I/O (RNTuple in progress)
+
+* [Minuit2.jl](https://github.com/JuliaHEP/Minuit2.jl): Minuit2 wrapper
+
+* [FastJet.jl](https://github.com/JuliaHEP/FastJet.jl): Some FastJet algs in pure Julia, very competitive performance
+
+* ... quite a bit more already, and growing ...
+"""
+
 # ╔═╡ 74603261-3b3b-4128-8ddc-a79511c1ca16
 md"""
 ## Math
@@ -1842,6 +1859,7 @@ md"""
 # ╠═1a4971df-e8c2-41e0-8391-95d2ab027f2e
 # ╟─9de46360-8ce9-4f43-a812-98711f5eadbb
 # ╟─437bdbfd-6e29-461f-885a-d47428c3b6cf
+# ╟─b739d526-0d9e-4e15-bc04-5b7362b7e6cd
 # ╟─74603261-3b3b-4128-8ddc-a79511c1ca16
 # ╟─ec31832a-36d7-484d-8a1d-fc3c3abe4990
 # ╟─7adee901-a5db-4526-8131-660a637ae0f5
