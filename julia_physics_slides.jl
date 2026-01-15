@@ -662,30 +662,6 @@ Returns an iterable generator:
 (f(x) for x in some_collection)
 ```"""
 
-# ╔═╡ a85133da-593c-4c3f-9aaf-df00a8265656
-md"""
-## Hello World (and more) in Julia"""
-
-# ╔═╡ 047b9bac-d692-4520-bff0-7b2a7e294ba5
-println("Hello, World!")
-
-# ╔═╡ f6f65bc9-f4b2-4565-bf87-2cf1c68c2142
-md"""
-Let's define a function"""
-
-# ╔═╡ 6839328b-8e1c-4874-b966-5400cb17b327
-f(x, y) = x * y
-
-# ╔═╡ d27c43a3-cf78-4b1f-bda7-e761f63e2b08
-f(20, 2.1)
-
-# ╔═╡ 3c2858f4-97bd-42ef-a1ff-45d8e3101d96
-md"""
-Multiplication is also defined for vectors, so this works, too:"""
-
-# ╔═╡ 05837a64-d61a-40f1-b4c9-0fcc8592a732
-f(4.2, [1, 2, 3, 4])
-
 # ╔═╡ bc7710c5-8638-4039-99ef-a411964a12c5
 md"""
 ## Multiple Dispatch
@@ -856,16 +832,6 @@ md"""
 4) Native assembly code (`@code_native`)
 5) Binary machine code
 """
-
-# ╔═╡ 93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
-md"""
-## Let's Look Under the Hood"""
-
-# ╔═╡ bc4af845-12ce-47f6-9320-a7372a5c5892
-@code_llvm debuginfo=:none f(20, 2.1)
-
-# ╔═╡ 79af3ef2-a18e-41c5-bffb-c1a452592204
-@code_native debuginfo=:none f(20, 2.1)
 
 # ╔═╡ eb1c9614-daf3-4a86-b056-52581bd0b07c
 md"""
@@ -1705,13 +1671,6 @@ md"""
 # ╟─abf717dd-32a5-45c6-889f-0ce17c5710b1
 # ╟─30745fee-1c83-4842-9e35-5d18c7fb08b2
 # ╟─73ea6c0e-5b72-446a-a869-6faee5fae48b
-# ╟─a85133da-593c-4c3f-9aaf-df00a8265656
-# ╠═047b9bac-d692-4520-bff0-7b2a7e294ba5
-# ╟─f6f65bc9-f4b2-4565-bf87-2cf1c68c2142
-# ╠═6839328b-8e1c-4874-b966-5400cb17b327
-# ╠═d27c43a3-cf78-4b1f-bda7-e761f63e2b08
-# ╟─3c2858f4-97bd-42ef-a1ff-45d8e3101d96
-# ╠═05837a64-d61a-40f1-b4c9-0fcc8592a732
 # ╟─bc7710c5-8638-4039-99ef-a411964a12c5
 # ╠═3a95425b-f714-49c4-b11f-8b087806b57b
 # ╠═ea5769cf-41ba-42cd-baa0-6e6843b50d00
@@ -1751,9 +1710,6 @@ md"""
 # ╟─703dc474-d4ab-45cb-a1b0-a1cde30d311d
 # ╠═05d3b4b6-e0aa-4db0-bc5b-6e7f710a3551
 # ╟─0272e720-03d4-45b0-b615-aaef019bec7f
-# ╟─93da2a4e-0bb5-4ff8-b237-fd514c1a3c21
-# ╠═bc4af845-12ce-47f6-9320-a7372a5c5892
-# ╠═79af3ef2-a18e-41c5-bffb-c1a452592204
 # ╟─eb1c9614-daf3-4a86-b056-52581bd0b07c
 # ╠═1d256fff-72c5-4057-928d-9cb0bbef572d
 # ╟─558799cf-c133-4558-ba3e-7ecafd9ce62e
