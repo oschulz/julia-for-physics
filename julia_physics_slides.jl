@@ -36,7 +36,6 @@ begin
 	mpg_logo = PlutoUI.LocalResource("images/logos/mpg-logo.svg")
 	mpp_logo = PlutoUI.LocalResource("images/logos/mpp-logo.svg")
 
-	prog_language_evolution = PlutoUI.LocalResource("images/figures/prog-language-evolution.jpg")
 	still_compiling = PlutoUI.LocalResource("images/figures/xkcd-303-compiling.png")
 	detcap_impurity_measurement = PlutoUI.LocalResource("images/figures/detcap-impurity-measurement.svg")
 	parton_posterior = PlutoUI.LocalResource("images/figures/parton-posterior.svg")
@@ -265,12 +264,6 @@ md"""
 * If you have programming experience, you have felt this, even if you didn't name it
 * Result: Packages tend not to compose well
 """
-
-# ╔═╡ 89d6904c-21f6-4027-adf2-64bafdc52380
-md"""# Languages have evolved, but ..."""
-
-# ╔═╡ 2a9e475d-c960-4d1d-9cd0-9636090ef704
-@htl """<img alt="(Julia)" src="$(prog_language_evolution.src)" style="width: 100%; display: block; margin: 0em;"/>"""
 
 # ╔═╡ 35c8b57c-daa4-4e04-b194-dc06b29dfdb1
 md"""
@@ -1846,8 +1839,6 @@ md"""
 # ╟─ea08384d-79a6-48e1-a893-0bb0f8134c9c
 # ╟─efb5333b-f5e4-4ca3-8664-11c277d4f24b
 # ╟─84196e50-44c8-4f77-9f23-b87234efce4d
-# ╟─89d6904c-21f6-4027-adf2-64bafdc52380
-# ╟─2a9e475d-c960-4d1d-9cd0-9636090ef704
 # ╟─35c8b57c-daa4-4e04-b194-dc06b29dfdb1
 # ╟─b8113ef0-4126-49ba-b57c-ada2da42696a
 # ╟─45c86bad-8692-4d5b-9cea-d2a0a12a0fc1
