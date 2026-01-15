@@ -274,9 +274,9 @@ md"""# Languages have evolved, but ..."""
 
 # ╔═╡ 35c8b57c-daa4-4e04-b194-dc06b29dfdb1
 md"""
-> I made up the term object-oriented, and I can tell you I did not have C++ in mind.
-
-Alan Kay
+**Disclaimers:**
+* This is a very selective and prejudiced. In reality, all of these have their place.
+* This is about the languages themselves - the Python community and package ecosystem are great!
 """
 
 # ╔═╡ b8113ef0-4126-49ba-b57c-ada2da42696a
