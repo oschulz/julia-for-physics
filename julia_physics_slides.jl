@@ -208,13 +208,6 @@ md"""
 * Result: Packages tend not to compose well
 """
 
-# ╔═╡ 35c8b57c-daa4-4e04-b194-dc06b29dfdb1
-md"""
-**Disclaimers:**
-* This is a very selective and prejudiced. In reality, all of these have their place.
-* This is about the languages themselves - the Python community and package ecosystem are great!
-"""
-
 # ╔═╡ b8113ef0-4126-49ba-b57c-ada2da42696a
 md"""
 ## What we want is a language ...
@@ -1677,7 +1670,6 @@ md"""
 # ╟─3d67632f-2e27-4d74-86ac-6851079cb5fd
 # ╟─efb5333b-f5e4-4ca3-8664-11c277d4f24b
 # ╟─84196e50-44c8-4f77-9f23-b87234efce4d
-# ╟─35c8b57c-daa4-4e04-b194-dc06b29dfdb1
 # ╟─b8113ef0-4126-49ba-b57c-ada2da42696a
 # ╟─45c86bad-8692-4d5b-9cea-d2a0a12a0fc1
 # ╟─efecd9a4-94af-494d-b63d-91a4ccf3357d
