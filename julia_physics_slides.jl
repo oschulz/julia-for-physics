@@ -866,6 +866,32 @@ end
 # ╔═╡ 43e5fe19-63d1-4b62-b654-85b62bdf66c7
 @code_llvm half_dynrange(Int16)
 
+# ╔═╡ 993037e5-2f2c-4979-9439-d71858eb7267
+md"""
+## Static compilation
+
+* `juliac` (since Julia v1.12) allows for compiling static binaries and libraries
+
+* Still very new, lot's of rough edges
+"""
+
+# ╔═╡ 1edca64e-424d-4fff-856f-4f3fa09af637
+write("hello_world.jl", """
+    @main function main(args)
+        println(Core.stdout, "Hello, World!")
+        return 0
+    end
+""");
+
+# ╔═╡ d54aa327-2201-44f7-a30b-986095e667aa
+juliac = joinpath(Sys.BINDIR, "..", "share", "julia", "juliac", "juliac.jl")
+
+# ╔═╡ dc8efd44-d6ec-4767-a533-d10d19dfc6ae
+run(`julia $juliac --experimental --trim=safe --output-exe hello_world hello_world.jl`)
+
+# ╔═╡ 73633373-cbec-4681-b486-b9d1db0caf66
+filesize("hello_world")
+
 # ╔═╡ e47f3072-ff1a-405b-9856-140163037ca7
 md"""
 # Use case: electric multipoles
@@ -1731,9 +1757,14 @@ md"""
 # ╠═1d256fff-72c5-4057-928d-9cb0bbef572d
 # ╟─558799cf-c133-4558-ba3e-7ecafd9ce62e
 # ╠═2f673b0f-69c4-4954-a2d5-4166ad01c9f1
-# ╠═ca78ed7d-7b04-435e-8d0b-44dd69fccb49
+# ╟─ca78ed7d-7b04-435e-8d0b-44dd69fccb49
 # ╠═d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
 # ╠═43e5fe19-63d1-4b62-b654-85b62bdf66c7
+# ╟─993037e5-2f2c-4979-9439-d71858eb7267
+# ╠═1edca64e-424d-4fff-856f-4f3fa09af637
+# ╠═d54aa327-2201-44f7-a30b-986095e667aa
+# ╠═dc8efd44-d6ec-4767-a533-d10d19dfc6ae
+# ╠═73633373-cbec-4681-b486-b9d1db0caf66
 # ╟─e47f3072-ff1a-405b-9856-140163037ca7
 # ╠═12dc0875-42a7-4682-8932-64e156ff9a43
 # ╠═336b524e-dfff-4a90-880d-e26f7ce92ed7
