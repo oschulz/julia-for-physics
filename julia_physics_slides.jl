@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.20.21
+# v0.20.24
 
 #> [frontmatter]
 #> title = "Julia for Physics (and Physicists)"
@@ -75,23 +75,8 @@ using Unitful
 # ╔═╡ 19976c96-e0b0-4b0d-b603-e79baa8c77a1
 using Measurements
 
-# ╔═╡ 12dc0875-42a7-4682-8932-64e156ff9a43
-using LinearAlgebra
-
-# ╔═╡ 6793cec8-a46d-49b0-aaca-d143ee089f3f
-using ForwardDiff: gradient
-
-# ╔═╡ ac18c16f-5088-448e-8318-17b2b6cd4f23
-using StaticArrays
-
-# ╔═╡ 00386bfd-ed5f-411f-b1c7-3bd885134eeb
+# ╔═╡ 4cb0eb33-5d2f-4e7e-a507-0a11f155aba7
 using Plots
-
-# ╔═╡ d17031ec-6292-482f-8972-be57a50cb172
-using BenchmarkTools
-
-# ╔═╡ d79f2aa8-c46e-43c0-8ba0-f110a5e32a06
-using Symbolics, Latexify
 
 # ╔═╡ 5f661f5c-8072-43d7-8202-f0214058041a
 begin
@@ -101,21 +86,6 @@ end
 
 # ╔═╡ d4b37b8e-3b58-42e0-90e0-e7827d325355
 using Colors, ColorSchemes, Images
-
-# ╔═╡ 330e7511-92bd-43b8-bebb-2f9678f30c3f
-using OrdinaryDiffEq
-
-# ╔═╡ 96dd2d0c-cd89-4945-953a-e89cfea501c1
-using DensityInterface, MeasureBase
-
-# ╔═╡ 3a6352fb-e71a-4aad-a3b5-7741b5e6985e
-using Optim
-
-# ╔═╡ 3de1ba1c-2acc-41c5-b463-a69fcfc86509
-using ForwardDiff
-
-# ╔═╡ 7c406d14-d8d5-499c-9fa0-a8fba23c3d1e
-using BAT
 
 # ╔═╡ d47af10e-fabe-454e-9de6-abd95c23de98
 Logging.disable_logging(Logging.Debug);
@@ -149,7 +119,7 @@ Logging.disable_logging(Logging.Debug);
 </div>
 
 <p style="text-align: center;"> 
-	<em>January 2026</em>
+	<em>March 2026</em>
 </p>"""
 
 # ╔═╡ be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
@@ -217,7 +187,7 @@ md"""
 * Scala, Go, Kotlin etc.:
     * Pro: Lots of individual strengths
     * Con: Math either fast *or* generic *or* or complicated
-    * Con: Calling C, Fortran or Phython code often difficult
+    * Con: Calling C, Fortran or Python code often difficult
     * Con: Composability isn't great
 """
 
@@ -957,200 +927,6 @@ end
 # ╔═╡ 43e5fe19-63d1-4b62-b654-85b62bdf66c7
 @code_llvm half_dynrange(Int16)
 
-# ╔═╡ e47f3072-ff1a-405b-9856-140163037ca7
-md"""
-# Use case: electric multipoles
-
-We'll need some packages and definitions ...
-"""
-
-# ╔═╡ 336b524e-dfff-4a90-880d-e26f7ce92ed7
-begin
-const ε₀ = 8.8541878188e-12 # Vacuum permittivity in F/m
-const kₑ = 1 / (4π * ε₀)    # Coulomb's constant in N·m²/C²
-const e = 1.602176634e-19   # Elementary charge in C
-const p_H₂O = 6.17e-30       # Dipole moment of H₂O in C·m
-end;
-
-# ╔═╡ b0a1abb9-77a3-432c-a6b9-5d87684cb404
-const NumVector{T<:Real} = AbstractVector{T}
-
-# ╔═╡ a7e73711-10d1-445f-840a-c764c7b1fec6
-md"""
-# Multipole types and a potential function
-"""
-
-# ╔═╡ 64bab154-2ea3-4791-8389-258fde40445d
-abstract type Multipole end
-
-# ╔═╡ be25fac4-fde3-4ad1-b2f1-a6c9be79a7c6
-"""
-    epot(a::Multipole, b::Multipole, r::NumVector)
-
-Compute the electrostatic potential energy between two multipoles.
-
-`r` points from `a` to `b`.
-"""
-function epot end;
-
-# ╔═╡ 20529b9c-aa29-4f58-b43c-79a2fa372133
-struct Monopole{T<:Real} <: Multipole
-    q::T
-end
-
-# ╔═╡ a7c2630f-4e7f-4fdd-becd-23d40d693b71
-md"""
-# Preserving numerical precision
-"""
-
-# ╔═╡ 0c24d0b0-e5e4-4938-991d-87dba8b3229d
-epot_not_great(a::Monopole, b::Monopole, r::NumVector) = kₑ * (a.q * b.q) / norm(r);
-
-# ╔═╡ 616cdf55-a19b-456b-b239-eab4c64e8bca
-typeof(1.0f0)
-
-# ╔═╡ 3722a2a6-a49a-4f67-8651-09e7504d4496
-typeof( epot_not_great(Monopole(1), Monopole(1), [1.0f0, 0.0f0, 0.0f0]) )
-
-# ╔═╡ 63019cd9-1ceb-4c47-a236-9daf5f21491c
-⋄(k::Real, x::T) where {T<:Real} = float(T)(k) * x
-
-# ╔═╡ 918cbb32-da1d-4e66-8b69-f2966e9a3d78
-epot(a::Monopole, b::Monopole, r::NumVector) = kₑ ⋄ ((a.q * b.q) / norm(r));
-
-# ╔═╡ f7b5e8ab-f544-4646-9bfa-eace52f29dba
-md"""
-# Let's have dipoles too
-"""
-
-# ╔═╡ a9363a5e-e172-473d-84be-0a49523b928d
-struct Dipole{T<:Real, V<:NumVector{T}} <: Multipole
-    p::V
-end
-
-# ╔═╡ 9702c79c-d787-489a-aaf5-56a33ee8f855
-epot(a::Monopole, b::Dipole, r::NumVector) = -kₑ ⋄ (a.q * dot(b.p, r) / norm(r)^3);
-
-# ╔═╡ 4f91f30c-fc7e-4dde-a87a-839ba1ca839d
-epot(a::Dipole, b::Monopole, r::NumVector) = epot(b, a, -r);
-
-# ╔═╡ 08480f14-a223-4513-970f-887a11ed3397
-function epot(a::Dipole, b::Dipole, r::NumVector)
-    rn = norm(r)
-    
-    p_dot_p = dot(a.p, b.p)
-    p_r_coupling = dot(a.p, r) * dot(b.p, r)
-    
-    return kₑ ⋄ (p_dot_p / rn^3 - 3 * p_r_coupling / rn^5)
-end
-
-# ╔═╡ 127934a0-3674-4890-b464-d01e8db26606
-typeof( epot(Monopole(1), Monopole(1), [1.0f0, 0.0f0, 0.0f0]) )
-
-# ╔═╡ 5be314a6-30e5-4f8b-8b48-706391df0751
-md"""
-# To get the force, use the force ...
-
-... of dual numbers (forward-mode automatic differentiation):
-"""
-
-# ╔═╡ 70d563ee-41e7-48d4-a2ee-959a94cee2f7
-md"""
-# StaticArrays
-
-Standard Julia arrays are mutable and heap-allocated:
-"""
-
-# ╔═╡ 3df4b10d-0c50-41cd-a98d-48f1aabc8978
-isbits(Dipole([0, 1, 0]))
-
-# ╔═╡ a4a0ce3d-7f04-4d03-8341-d1016fd2684c
-md"""
-StaticArrays provides stack-allocated immutable arrays (and more):
-"""
-
-# ╔═╡ 697b0309-dc7c-4645-8a85-f0c6f0ce84e7
-const Vec3{T<:Real} = SVector{3,T}
-
-# ╔═╡ eabdbcdc-5ea0-4673-854c-bc62609711d6
-isbits(Dipole(Vec3(0, 1, 0)))
-
-# ╔═╡ 5986bb3b-a397-4dca-897e-21cc47e22368
-md"""
-# Let's calculate more often
-"""
-
-# ╔═╡ 7640dbdd-fb4a-48ee-8fb1-4a489c90e5d4
-mdpot(r) = epot(
-	Monopole(Float32(e)),
-	Dipole(Vec3(0, Float32(p_H₂O), 0)),
-	r
-);
-
-# ╔═╡ af5154b4-11c1-4ac6-a5d7-590857706c38
-R = Vec3.(randn(Float32, 10^6), randn(Float32, 10^6), randn(Float32, 10^6))
-
-# ╔═╡ 30f3fae6-a901-4dc7-9eed-694ebbee3357
-mdpot.(R)
-
-# ╔═╡ 656ef710-7cbf-43f8-9a46-a454b7afba82
-md"""
-# Let's plot the potential
-"""
-
-# ╔═╡ 617d799a-97f6-4a67-99f1-b356e0771c70
-Rx, Ry = range(-1e-10, 1e-10, length = 100), range(-1e-10, 1e-10, length = 100);
-
-# ╔═╡ 5f19b41e-46ba-4ff1-a0c8-fe0901467319
-heatmap(Rx .* 10^10, Ry .* 10^10, mdpot.(Vec3.(Rx, Ry', 0)) .* 1e13)
-
-# ╔═╡ 035fc990-97df-4979-b91a-a96840a47394
-md"""
-# The need ...
-"""
-
-# ╔═╡ ef343392-a8d8-42aa-b9a5-4676c1897a26
-md"""
-# ... for speed
-"""
-
-# ╔═╡ 3b189692-d1aa-4e5b-87ad-4498ca11990d
-GPUorCPUArray = try
-	eval(:(import CUDA; CUDA.CuArray))
-catch
-	Array
-end
-
-# ╔═╡ f4cf1b57-dfee-46ae-951a-d8dc54a401a4
-R_ondev = GPUorCPUArray(R);
-
-# ╔═╡ faae1faa-c936-4c69-b3a8-004b3a4eeaf1
-typeof(R_ondev)
-
-# ╔═╡ 0f515432-fce3-4719-bfe2-97b2bfd325c6
-md"""
-# Can I get the math for that?
-"""
-
-# ╔═╡ 24326b97-3720-448c-b6ec-b521410920e8
-@variables r_sym[1:3]
-
-# ╔═╡ 40437242-ec7f-408a-b164-3c4bbf0908d1
-epot(Dipole([1,0,0]), Dipole([1,0,0]), r_sym)
-
-# ╔═╡ 4de53356-a7f8-462c-8501-aee275293ae7
-md"""
-# ... and more math ...
-"""
-
-# ╔═╡ c88008e3-25f7-4a4c-8547-d7e61251f7da
-epot(Monopole(1), Monopole(1), [r_sym...])
-
-# ╔═╡ e8dacb42-d4ac-4093-b74b-f4a64a0eae27
-function eforce(src::Multipole, trg::Multipole, r::AbstractVector{Num})
-    [Symbolics.derivative(epot(src, trg, [r...]), r_i) for r_i in [r...]]
-end
-
 # ╔═╡ e117e215-63b2-4a4a-a80d-76c00453b04e
 md"""
 ## Package management
@@ -1253,12 +1029,6 @@ md"""
 md"""
 ## Let's Make a Plot"""
 
-# ╔═╡ 1174e4de-7433-49ec-bf8e-8b4dbed1728c
-# ╠═╡ disabled = true
-#=╠═╡
-using Plots
-  ╠═╡ =#
-
 # ╔═╡ 0d0353b1-bed3-496e-8f7a-a3c52bb418ea
 Plots.gr(size = (400,300));
 
@@ -1343,37 +1113,6 @@ begin
     g[1].A
 end
 
-# ╔═╡ 3bbbdeb4-97d5-4c4e-bf4f-9d4745b34d97
-eforce(src::Multipole, trg::Multipole, r::NumVector) =
-	- gradient(r -> epot(src, trg, r), r);
-
-# ╔═╡ 4f914448-652a-4fe0-9c61-4ff83d21674c
-eforce(Monopole(e), Monopole(e), [1e-10, 0, 0])
-
-# ╔═╡ d1bc9057-596a-4d71-8830-f4d8e45b1bf5
-eforce(Monopole(e), Dipole([0, p_H₂O, 0]), [1e-10, 0, 0])
-
-# ╔═╡ fbeb7896-6211-4c24-ae55-b05f67a630d2
-eforce(Dipole([0, p_H₂O, 0]), Dipole([0, p_H₂O, 0]), [1e-10, 0, 0])
-
-# ╔═╡ f7ca8107-212c-4a11-9226-4374224779a0
-mdforce(r) = eforce(Monopole(Float32(e)), Dipole(Vec3(0, Float32(p_H₂O), 0)), r);
-
-# ╔═╡ 32355e1d-41f6-4195-9eb5-1323f9984b83
-mdforce.(R)
-
-# ╔═╡ 3c242d93-9eaf-4e67-ad34-12275dfaeef0
-@benchmark sum(mdforce.($R))
-
-# ╔═╡ 8e1dbbe3-484a-4139-913b-bccce87452fb
-typeof(mdforce.(R_ondev))
-
-# ╔═╡ 8f15157c-1fb5-4ef0-988c-f3a7d162b5eb
-@benchmark sum(mdforce.($R_ondev))
-
-# ╔═╡ 7085c6bd-a0d5-41b4-9d7c-aed6e3f9f95e
-eforce(Monopole(1), Monopole(1), r_sym)
-
 # ╔═╡ 9f5b2e51-0ce8-45af-9aa6-ca8eb2265be1
 f_loss(mylayer(x))
 
@@ -1457,193 +1196,6 @@ let	c = T(c_re) + T(c_im) * im
 	#heatmap(N_plot, ratio = 1, format = :jpg)
 	@info "max iterations: $(maximum(N_iter))"
 	get.(Ref(ColorSchemes.magma), N_plot .* inv(maximum(N_plot)))
-end
-
-# ╔═╡ c49929f6-28c5-4789-9f8a-ea3936d8984c
-md"""
-## Differential equations
-
-A dampened spring oscillator:
-"""
-
-# ╔═╡ 1309cae9-07d9-48ed-9259-7549e8d354ff
-function harmonic_osc_eq(u, p, t)
-    x, v = u[1], u[2]
-	k, m, c = p[1], p[2], p[3]
-    dx_dt = v
-    dv_dt = - k/m * x - c/m * v
-	du_dt = [dx_dt, dv_dt]
-	return du_dt
-end;
-
-# ╔═╡ 51f26e90-9f93-41f0-ae2f-0a99f8af9dcd
-md"""
-Spring constant $k$, mass $$m$$, friction coefficient $$c$$:
-"""
-
-# ╔═╡ 57171b3a-83f9-4c60-8dc0-91d1af87f0c7
-ho_pars = (k = 5.0, m = 1.0, c = 0.5);
-
-# ╔═╡ 2f3a30aa-0ec2-4b61-b56f-a61e7b114678
-x0, v0 = [1.0, 0.0];
-
-# ╔═╡ 5f285f53-5e79-4ff8-a8f2-0d2572cac4d6
-t_span = (0.0, 15.0);
-
-# ╔═╡ 02c1c4fc-c816-4ae2-97fc-851fa888fcee
-md"""
-## Solving the ODE
-"""
-
-# ╔═╡ 6de5a8d5-e69e-494f-9b14-586b332e1365
-sol = solve(
-	ODEProblem(harmonic_osc_eq, [x0, v0], t_span, [ho_pars...]),
-	saveat = 0:0.1:15
-)
-
-# ╔═╡ b835f142-999d-4abf-9efc-db53a3035e57
-md"""
-## Plotting the ODE solution
-"""
-
-# ╔═╡ df8e4761-aacf-401b-9b8b-51968928ce62
-let t = sol.t, x = sol[1, :], v = sol[2, :]
-	plot(t, x, label="x", linecolor = :blue, linewidth=2)
-	plot!(t, v, label="v", linecolor = :green, linewidth=2)
-end
-
-# ╔═╡ c9f91628-6eb2-4d65-a6f3-a6c207cd45c3
-md"""
-## Fitting measured data
-"""
-
-# ╔═╡ 1e825778-072e-4687-ad44-478ead7310b2
-md"""
-A statistical forward model:
-"""
-
-# ╔═╡ 98fb1da3-dc75-4bd6-a038-8aa636bbd4c1
-function fwd_model(t_obs::AbstractVector{<:Real}, pars::NamedTuple)
-	m = 1.0
-	(;x0, v0, k, c) = pars
-	sol = solve(
-		ODEProblem(
-			harmonic_osc_eq, [x0, v0],
-			(first(t_obs), last(t_obs)), [k, m, c]
-		),
-		# sensealg = SciMLSensitivity.EnzymeVJP(),
-		saveat = t_obs
-	)
-	x_expected = sol[1, :]
-	σ_noise = 0.05
-	return MvNormal(x_expected, σ_noise)
-end;
-
-# ╔═╡ 92eadfc1-10d8-411f-9662-5e51d09f4c89
-md"""
-## Toy data generation
-"""
-
-# ╔═╡ d4453a61-7583-4310-92f2-58e872024f20
-t_obs = 0:0.1:30;
-
-# ╔═╡ 4c89b6b2-7300-4651-a0f6-422c7eaf5b53
-p_truth = (x0 = 1.0, v0 = 0.0, k = 5.0, c = 0.5);
-
-# ╔═╡ 6a569659-b410-4688-b1ae-3d59656eac60
-x_obs = rand(fwd_model(t_obs, p_truth));
-
-# ╔═╡ bc9516a5-b468-4d75-be44-9b3799f0fa7a
-scatter(t_obs, x_obs, ms = 2, msw = 0)
-
-# ╔═╡ 1de01956-f6fd-4c5a-b52a-63ef9a6bd807
-md"""
-## Likelihood definition
-"""
-
-# ╔═╡ a31fade0-434b-43ad-aad5-9e06742e8a7e
-ℒ = Likelihood(p -> fwd_model(t_obs, p), x_obs);
-
-# ╔═╡ 7af24c6d-f2c5-4e6a-9024-28c4fc905ae9
-p_init = (x0 = 1.2, v0 = 0.1, k = 4.7, c = 1.0);
-
-# ╔═╡ 43591cce-aafe-4197-8ba4-21b83ae27441
-logdensityof(ℒ, p_init)
-
-# ╔═╡ 10dd4cc2-43d0-42da-9351-d314be777c15
-md"""
-## Maximum Likelihood fit
-"""
-
-# ╔═╡ 84639dc9-8f76-4ec9-8472-1176b6636289
-p_ctor = NamedTuple{propertynames(p_init)}
-
-# ╔═╡ b4f141bf-cb0f-4c97-b3e2-3dbddf0f220e
-f_opt = logdensityof(ℒ) ∘ p_ctor;
-
-# ╔═╡ 3734e7ca-d81c-43e5-8b61-f62e6ce7e45d
-opt_result = Optim.maximize(log ∘ ℒ ∘ p_ctor, collect(p_init));
-
-# ╔═╡ c039595f-7a93-458b-8e47-e044d652987c
-opt_result.res
-
-# ╔═╡ 2ff860e6-acd6-4a13-adef-dad8a828cf50
-md"""
-## Maximum-Likelihood fit result
-"""
-
-# ╔═╡ 1a4971df-e8c2-41e0-8391-95d2ab027f2e
-p_max_likelihood = p_ctor(Optim.maximizer(opt_result))
-
-# ╔═╡ 9de46360-8ce9-4f43-a812-98711f5eadbb
-begin
-scatter(t_obs, x_obs, ms = 2, msw = 0, label = "obs")
-plot!(t_obs, mean(fwd_model(t_obs, p_max_likelihood)), label = "max-likelihood")
-end
-
-# ╔═╡ 341af4fe-fecd-4a44-bbde-126cb4e9421c
-md"""
-## Parameter uncertainly and correlation estimate
-"""
-
-# ╔═╡ 1eb7e3cb-93bc-428d-aea6-6d2287ed37a4
-p_Σ = inv(ForwardDiff.hessian(f_opt, Optim.maximizer(opt_result)))
-
-# ╔═╡ 5d8a815b-88fd-4f56-894d-9558e480a09b
-md"""
-Can also use reverse-mode AD:
-
-```julia
-import SciMLSensitivity
-inv(Zygote.hessian(f_opt, Optim.maximizer(opt_result)))
-```
-"""
-
-# ╔═╡ 7e7f9cfc-6b1c-4c12-9ceb-393d057e8072
-md"""
-## Bayesian maxmium posterior (MAP)
-"""
-
-# ╔═╡ 4de83290-7872-432e-a4f3-727004a5c733
-prior = BAT.distprod((
-	x0 = Normal(0, 1), v0 = Normal(0, 1), k = Exponential(3.0), c = Exponential(0.5)
-));
-
-# ╔═╡ 18442b1e-909e-4969-8bb5-630230616cfe
-posterior = lbqintegral(ℒ, prior);
-
-# ╔═╡ ab0105e7-b943-46a4-97d9-92c99cbabd2e
-p_max_postior = bat_findmode(posterior, BATContext()).result
-
-# ╔═╡ 29522a10-4cd6-4136-9049-08e5102b16d7
-md"""
-## MAP fit result
-"""
-
-# ╔═╡ 71733b22-c501-4c69-b847-12b51bd32ef6
-begin
-scatter(t_obs, x_obs, ms = 2, msw = 0, label = "obs")
-plot!(t_obs, mean(fwd_model(t_obs, p_max_postior)), label = "MAP")
 end
 
 # ╔═╡ 437bdbfd-6e29-461f-885a-d47428c3b6cf
@@ -1923,65 +1475,6 @@ md"""
 # ╠═ca78ed7d-7b04-435e-8d0b-44dd69fccb49
 # ╠═d4e3f14f-dffb-45d6-b079-5aecd37cbfe6
 # ╠═43e5fe19-63d1-4b62-b654-85b62bdf66c7
-# ╟─e47f3072-ff1a-405b-9856-140163037ca7
-# ╠═12dc0875-42a7-4682-8932-64e156ff9a43
-# ╠═336b524e-dfff-4a90-880d-e26f7ce92ed7
-# ╠═b0a1abb9-77a3-432c-a6b9-5d87684cb404
-# ╟─a7e73711-10d1-445f-840a-c764c7b1fec6
-# ╠═64bab154-2ea3-4791-8389-258fde40445d
-# ╠═be25fac4-fde3-4ad1-b2f1-a6c9be79a7c6
-# ╠═20529b9c-aa29-4f58-b43c-79a2fa372133
-# ╟─a7c2630f-4e7f-4fdd-becd-23d40d693b71
-# ╠═0c24d0b0-e5e4-4938-991d-87dba8b3229d
-# ╠═616cdf55-a19b-456b-b239-eab4c64e8bca
-# ╠═3722a2a6-a49a-4f67-8651-09e7504d4496
-# ╠═63019cd9-1ceb-4c47-a236-9daf5f21491c
-# ╠═918cbb32-da1d-4e66-8b69-f2966e9a3d78
-# ╠═127934a0-3674-4890-b464-d01e8db26606
-# ╟─f7b5e8ab-f544-4646-9bfa-eace52f29dba
-# ╠═a9363a5e-e172-473d-84be-0a49523b928d
-# ╠═9702c79c-d787-489a-aaf5-56a33ee8f855
-# ╠═4f91f30c-fc7e-4dde-a87a-839ba1ca839d
-# ╠═08480f14-a223-4513-970f-887a11ed3397
-# ╟─5be314a6-30e5-4f8b-8b48-706391df0751
-# ╠═6793cec8-a46d-49b0-aaca-d143ee089f3f
-# ╠═3bbbdeb4-97d5-4c4e-bf4f-9d4745b34d97
-# ╠═4f914448-652a-4fe0-9c61-4ff83d21674c
-# ╠═d1bc9057-596a-4d71-8830-f4d8e45b1bf5
-# ╠═fbeb7896-6211-4c24-ae55-b05f67a630d2
-# ╟─70d563ee-41e7-48d4-a2ee-959a94cee2f7
-# ╠═3df4b10d-0c50-41cd-a98d-48f1aabc8978
-# ╟─a4a0ce3d-7f04-4d03-8341-d1016fd2684c
-# ╠═ac18c16f-5088-448e-8318-17b2b6cd4f23
-# ╠═697b0309-dc7c-4645-8a85-f0c6f0ce84e7
-# ╠═eabdbcdc-5ea0-4673-854c-bc62609711d6
-# ╟─5986bb3b-a397-4dca-897e-21cc47e22368
-# ╠═7640dbdd-fb4a-48ee-8fb1-4a489c90e5d4
-# ╠═f7ca8107-212c-4a11-9226-4374224779a0
-# ╠═af5154b4-11c1-4ac6-a5d7-590857706c38
-# ╠═30f3fae6-a901-4dc7-9eed-694ebbee3357
-# ╠═32355e1d-41f6-4195-9eb5-1323f9984b83
-# ╟─656ef710-7cbf-43f8-9a46-a454b7afba82
-# ╠═00386bfd-ed5f-411f-b1c7-3bd885134eeb
-# ╠═617d799a-97f6-4a67-99f1-b356e0771c70
-# ╠═5f19b41e-46ba-4ff1-a0c8-fe0901467319
-# ╟─035fc990-97df-4979-b91a-a96840a47394
-# ╠═d17031ec-6292-482f-8972-be57a50cb172
-# ╠═3c242d93-9eaf-4e67-ad34-12275dfaeef0
-# ╟─ef343392-a8d8-42aa-b9a5-4676c1897a26
-# ╟─3b189692-d1aa-4e5b-87ad-4498ca11990d
-# ╠═f4cf1b57-dfee-46ae-951a-d8dc54a401a4
-# ╠═faae1faa-c936-4c69-b3a8-004b3a4eeaf1
-# ╠═8e1dbbe3-484a-4139-913b-bccce87452fb
-# ╠═8f15157c-1fb5-4ef0-988c-f3a7d162b5eb
-# ╟─0f515432-fce3-4719-bfe2-97b2bfd325c6
-# ╠═d79f2aa8-c46e-43c0-8ba0-f110a5e32a06
-# ╠═24326b97-3720-448c-b6ec-b521410920e8
-# ╠═40437242-ec7f-408a-b164-3c4bbf0908d1
-# ╟─4de53356-a7f8-462c-8501-aee275293ae7
-# ╠═c88008e3-25f7-4a4c-8547-d7e61251f7da
-# ╠═e8dacb42-d4ac-4093-b74b-f4a64a0eae27
-# ╠═7085c6bd-a0d5-41b4-9d7c-aed6e3f9f95e
 # ╟─e117e215-63b2-4a4a-a80d-76c00453b04e
 # ╟─65d1344c-75be-4f96-959c-542c601c53da
 # ╟─b699c7a6-5bbf-42fe-91b6-764ee8134389
@@ -1992,7 +1485,7 @@ md"""
 # ╟─e5a1dcd9-cc13-4c0d-953c-a87245dbf975
 # ╟─0f13def9-9f6b-41ed-bfd5-c72066e2e651
 # ╟─55567c61-1d16-4415-87c4-20778e05533e
-# ╠═1174e4de-7433-49ec-bf8e-8b4dbed1728c
+# ╠═4cb0eb33-5d2f-4e7e-a507-0a11f155aba7
 # ╠═0d0353b1-bed3-496e-8f7a-a3c52bb418ea
 # ╠═8f8349d7-a150-41cc-8e51-7a0853824443
 # ╟─076d772e-1220-4e2e-8696-7c512e8c8928
@@ -2018,57 +1511,13 @@ md"""
 # ╟─d52e66ab-fe4b-46fb-8a8c-42e4e6a431c2
 # ╠═dc328c02-1ec0-4b95-ab42-e4d3d1352f7b
 # ╟─9f31536e-9d94-4e46-ad1f-b96a0e04524e
-# ╠═aa2547fa-86a1-4777-9106-f19c58ac4fac
+# ╟─aa2547fa-86a1-4777-9106-f19c58ac4fac
 # ╟─d11fd6d2-7b71-45d2-8856-2e8315417376
 # ╟─b1e6c795-0749-4f9c-865e-a43fca0992b1
-# ╟─40394f1c-2c7d-4309-b9d4-3c2b4f55db99
+# ╠═40394f1c-2c7d-4309-b9d4-3c2b4f55db99
 # ╟─8d8fbb75-ad99-4a78-9476-e1f388217fef
 # ╟─d5191740-521c-4913-94bb-ca3d55f01d12
 # ╟─4aba92af-a16b-4623-8a74-7ecc489e9634
-# ╟─c49929f6-28c5-4789-9f8a-ea3936d8984c
-# ╠═1309cae9-07d9-48ed-9259-7549e8d354ff
-# ╟─51f26e90-9f93-41f0-ae2f-0a99f8af9dcd
-# ╠═57171b3a-83f9-4c60-8dc0-91d1af87f0c7
-# ╠═2f3a30aa-0ec2-4b61-b56f-a61e7b114678
-# ╠═5f285f53-5e79-4ff8-a8f2-0d2572cac4d6
-# ╟─02c1c4fc-c816-4ae2-97fc-851fa888fcee
-# ╠═330e7511-92bd-43b8-bebb-2f9678f30c3f
-# ╠═6de5a8d5-e69e-494f-9b14-586b332e1365
-# ╟─b835f142-999d-4abf-9efc-db53a3035e57
-# ╠═df8e4761-aacf-401b-9b8b-51968928ce62
-# ╟─c9f91628-6eb2-4d65-a6f3-a6c207cd45c3
-# ╟─1e825778-072e-4687-ad44-478ead7310b2
-# ╠═98fb1da3-dc75-4bd6-a038-8aa636bbd4c1
-# ╟─92eadfc1-10d8-411f-9662-5e51d09f4c89
-# ╠═d4453a61-7583-4310-92f2-58e872024f20
-# ╠═4c89b6b2-7300-4651-a0f6-422c7eaf5b53
-# ╠═6a569659-b410-4688-b1ae-3d59656eac60
-# ╠═bc9516a5-b468-4d75-be44-9b3799f0fa7a
-# ╟─1de01956-f6fd-4c5a-b52a-63ef9a6bd807
-# ╠═96dd2d0c-cd89-4945-953a-e89cfea501c1
-# ╠═a31fade0-434b-43ad-aad5-9e06742e8a7e
-# ╠═7af24c6d-f2c5-4e6a-9024-28c4fc905ae9
-# ╠═43591cce-aafe-4197-8ba4-21b83ae27441
-# ╟─10dd4cc2-43d0-42da-9351-d314be777c15
-# ╠═84639dc9-8f76-4ec9-8472-1176b6636289
-# ╠═b4f141bf-cb0f-4c97-b3e2-3dbddf0f220e
-# ╠═3a6352fb-e71a-4aad-a3b5-7741b5e6985e
-# ╠═3734e7ca-d81c-43e5-8b61-f62e6ce7e45d
-# ╠═c039595f-7a93-458b-8e47-e044d652987c
-# ╟─2ff860e6-acd6-4a13-adef-dad8a828cf50
-# ╠═1a4971df-e8c2-41e0-8391-95d2ab027f2e
-# ╟─9de46360-8ce9-4f43-a812-98711f5eadbb
-# ╟─341af4fe-fecd-4a44-bbde-126cb4e9421c
-# ╠═3de1ba1c-2acc-41c5-b463-a69fcfc86509
-# ╠═1eb7e3cb-93bc-428d-aea6-6d2287ed37a4
-# ╟─5d8a815b-88fd-4f56-894d-9558e480a09b
-# ╟─7e7f9cfc-6b1c-4c12-9ceb-393d057e8072
-# ╠═7c406d14-d8d5-499c-9fa0-a8fba23c3d1e
-# ╠═4de83290-7872-432e-a4f3-727004a5c733
-# ╠═18442b1e-909e-4969-8bb5-630230616cfe
-# ╠═ab0105e7-b943-46a4-97d9-92c99cbabd2e
-# ╟─29522a10-4cd6-4136-9049-08e5102b16d7
-# ╠═71733b22-c501-4c69-b847-12b51bd32ef6
 # ╟─437bdbfd-6e29-461f-885a-d47428c3b6cf
 # ╟─74603261-3b3b-4128-8ddc-a79511c1ca16
 # ╟─ec31832a-36d7-484d-8a1d-fc3c3abe4990
