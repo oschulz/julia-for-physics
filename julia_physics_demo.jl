@@ -190,7 +190,7 @@ typeof( epot_not_great(Monopole(1), Monopole(1), [1.0f0, 0.0f0, 0.0f0]) )
 ⋄(k::Real, x::T) where {T<:Real} = float(T)(k) * x
 
 # ╔═╡ 918cbb32-da1d-4e66-8b69-f2966e9a3d78
-epot(a::Monopole, b::Monopole, r::NumVector) = kₑ ⋄ ((a.q * b.q) / norm(r));
+epot(a::Monopole, b::Monopole, r::NumVector) = (kₑ ⋄ a.q) * (b.q / norm(r));
 
 # ╔═╡ f7b5e8ab-f544-4646-9bfa-eace52f29dba
 md"""
@@ -203,19 +203,25 @@ struct Dipole{T<:Real, V<:NumVector{T}} <: Multipole
 end
 
 # ╔═╡ 9702c79c-d787-489a-aaf5-56a33ee8f855
-epot(a::Monopole, b::Dipole, r::NumVector) = -kₑ ⋄ (a.q * dot(b.p, r) / norm(r)^3);
+function epot(a::Monopole, b::Dipole, r::NumVector)
+    r_mag = norm(r)
+    r̂ = r / r_mag
+    pb_mag = norm(b.p)
+    p̂b = b.p / pb_mag
+    return -(kₑ ⋄ a.q) * (pb_mag / r_mag) * dot(p̂b, r̂) / r_mag
+end
 
 # ╔═╡ 4f91f30c-fc7e-4dde-a87a-839ba1ca839d
 epot(a::Dipole, b::Monopole, r::NumVector) = epot(b, a, -r);
 
 # ╔═╡ 08480f14-a223-4513-970f-887a11ed3397
 function epot(a::Dipole, b::Dipole, r::NumVector)
-    rn = norm(r)
-    
-    p_dot_p = dot(a.p, b.p)
-    p_r_coupling = dot(a.p, r) * dot(b.p, r)
-    
-    return kₑ ⋄ (p_dot_p / rn^3 - 3 * p_r_coupling / rn^5)
+    r_mag = norm(r)
+    r̂ = r / r_mag
+    pa_mag = norm(a.p); pb_mag = norm(b.p)
+    p̂a = a.p / pa_mag; p̂b = b.p / pb_mag
+    angular = dot(p̂a, p̂b) - 3 * dot(p̂a, r̂) * dot(p̂b, r̂)
+    return (kₑ ⋄ (pa_mag / r_mag)) * (pb_mag / r_mag) * angular / r_mag
 end
 
 # ╔═╡ 127934a0-3674-4890-b464-d01e8db26606
