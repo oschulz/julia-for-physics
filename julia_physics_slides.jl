@@ -119,7 +119,7 @@ Logging.disable_logging(Logging.Debug);
 </div>
 
 <p style="text-align: center;"> 
-	<em>March 2026</em>
+	<em>April 2026</em>
 </p>"""
 
 # ╔═╡ be8c934c-9f4a-4b37-bdb2-2bf3be1698b6
@@ -1514,7 +1514,7 @@ md"""
 # ╟─aa2547fa-86a1-4777-9106-f19c58ac4fac
 # ╟─d11fd6d2-7b71-45d2-8856-2e8315417376
 # ╟─b1e6c795-0749-4f9c-865e-a43fca0992b1
-# ╠═40394f1c-2c7d-4309-b9d4-3c2b4f55db99
+# ╟─40394f1c-2c7d-4309-b9d4-3c2b4f55db99
 # ╟─8d8fbb75-ad99-4a78-9476-e1f388217fef
 # ╟─d5191740-521c-4913-94bb-ca3d55f01d12
 # ╟─4aba92af-a16b-4623-8a74-7ecc489e9634
